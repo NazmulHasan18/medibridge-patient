@@ -42,7 +42,7 @@ const HeroSection = () => {
                         className="relative h-full bg-pink-300 bg-opacity-60 bg-cover bg-center bg-blend-soft-light px-16 py-8"
                         style={{ backgroundImage: `url(${element.image})` }}
                      >
-                        <div className="relative z-10 text-blue-900 px-6 py-16 md:px-16 md:py-24">
+                        <div className="relative z-10 text-blue-900 px-6 py-16 md:px-16 md:py-24 container mx-auto">
                            <h1 className="text-4xl font-extrabold sm:text-5xl md:text-6xl mb-6">
                               {element.title}
                            </h1>

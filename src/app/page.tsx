@@ -2,6 +2,7 @@ import HeroSection from "@/components/HeroSection/HeroSection";
 import Appointment from "@/components/HomePage/Appointment";
 import InfoCard from "@/components/HomePage/InfoCard";
 import Introduction from "@/components/HomePage/Introduction";
+import OurServices from "@/components/HomePage/OurServices";
 
 export default function Home() {
    return (
@@ -10,8 +11,9 @@ export default function Home() {
          <div className="container mx-auto p-10">
             <InfoCard></InfoCard>
             <Introduction></Introduction>
-            <Appointment></Appointment>
          </div>
+         <OurServices></OurServices>
+         <Appointment></Appointment>
          <h1>Home Page</h1>
       </div>
    );
