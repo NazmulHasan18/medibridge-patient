@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Montserrat, Lora } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
 
-const geistSans = Geist({
-   variable: "--font-geist-sans",
+// Define the fonts with the correct variable names
+const montserrat = Montserrat({
+   variable: "--font-montserrat",
    subsets: ["latin"],
+   weight: ["400", "500", "700", "900"], // Add weights as needed
 });
 
-const geistMono = Geist_Mono({
-   variable: "--font-geist-mono",
+const lora = Lora({
+   variable: "--font-lora",
    subsets: ["latin"],
+   weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -25,8 +28,8 @@ export default function RootLayout({
 }>) {
    return (
       <html lang="en">
-         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-            <Navbar></Navbar>
+         <body className={`${montserrat.variable} ${lora.variable} antialiased`}>
+            <Navbar />
             <main>{children}</main>
          </body>
       </html>

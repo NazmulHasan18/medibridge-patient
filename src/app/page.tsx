@@ -9,8 +9,8 @@ export default function Home() {
          <HeroSection></HeroSection>
          <div className="container mx-auto p-10">
             <InfoCard></InfoCard>
-            <Appointment></Appointment>
             <Introduction></Introduction>
+            <Appointment></Appointment>
          </div>
          <h1>Home Page</h1>
       </div>

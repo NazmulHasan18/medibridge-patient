@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-   font-family: Arial, Helvetica, sans-serif;
+   /* font-family: Arial, Helvetica, sans-serif; */
    padding: 0;
    margin: 0;
 }
@@ -70,5 +70,11 @@ body {
    }
    body {
       @apply bg-background text-foreground;
+      font-family: var(--font-montserrat), sans-serif; /* Apply Montserrat to headings */
+   }
+   h1,
+   h2,
+   h3 {
+      font-family: var(--font-lora), serif; /* Apply Lora to body text */
    }
 }

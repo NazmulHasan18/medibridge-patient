@@ -12,26 +12,26 @@ const InfoCard = () => {
          title: "Get Your Doctors",
          description: "Access complete visitor details while adhering to all terms and conditions.",
          icon: <Stethoscope size={30} />,
-         color: "bg-blue-200",
+         color: "bg-blue-200 hover:bg-blue-100",
       },
       {
          title: "Need Ambulance?",
          description: "Get emergency medical assistance quickly and efficiently. Call +8801XXXXXXXX now.",
          icon: <Ambulance size={30} />,
-         color: "bg-red-200",
+         color: "bg-red-200 hover:bg-red-100",
       },
       {
          title: "Our Patients Say",
          description: "Hear from our patients about their experiences with our healthcare services.",
          icon: <Ambulance size={30} />,
-         color: "bg-green-200",
+         color: "bg-green-200 hover:bg-green-100",
       },
       {
          title: "Reach Out to Us",
          description:
             "Need assistance or want to visit us? Find our location, contact details, and support options here.     ",
          icon: <MapPinHouse size={30} />,
-         color: "bg-gray-200",
+         color: "bg-gray-200 hover:bg-gray-100",
       },
    ];
 
@@ -40,7 +40,10 @@ const InfoCard = () => {
          {infoContent.map((info, i) => (
             <Card
                key={i}
-               className={clsx("md:h-56 w-64  flex flex-col justify-between", info.color ? info.color : "")}
+               className={clsx(
+                  "md:h-56 w-[17rem] p-2 flex flex-col justify-between",
+                  info.color ? info.color : ""
+               )}
             >
                <CardHeader className="pb-2">
                   <CardTitle className="text-lg flex gap-4 items-center justify-center pb-4">
