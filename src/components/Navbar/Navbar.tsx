@@ -12,7 +12,6 @@ const Navbar = () => {
    const navItems = ["About", "Services", "Contact"];
    const [open, setOpen] = useState(false);
    const path = usePathname();
-   console.log(path);
 
    return (
       <header

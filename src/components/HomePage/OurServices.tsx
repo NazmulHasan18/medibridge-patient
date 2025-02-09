@@ -18,8 +18,8 @@ const OurServices = async () => {
       <section className="bg-blue-900 text-white">
          <div className="container mx-auto p-10">
             <h1 className="text-4xl font-semibold">Our Services</h1>
-            <h2 className="text-2xl">Comprehensive Healthcare Services at Your Fingertips</h2>
-            <div className="w-96 h-1 bg-white"></div>
+            <p className="text-2xl">Comprehensive Healthcare Services at Your Fingertips</p>
+            <div className="w-full md:w-96 h-1 bg-white"></div>
 
             <div className="my-16">
                <Carousel

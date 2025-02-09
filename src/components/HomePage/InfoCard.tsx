@@ -36,12 +36,12 @@ const InfoCard = () => {
    ];
 
    return (
-      <section className="flex gap-4 justify-around items-center flex-col lg:flex-row">
+      <section className="flex gap-4 justify-around items-center flex-col md:flex-row flex-wrap">
          {infoContent.map((info, i) => (
             <Card
                key={i}
                className={clsx(
-                  "md:h-56 w-[17rem] p-2 flex flex-col justify-between",
+                  "md:h-56 w-full md:w-[17rem] p-2 flex flex-col justify-between",
                   info.color ? info.color : ""
                )}
             >

@@ -34,19 +34,20 @@ const Introduction = () => {
    };
 
    return (
-      <section className="grid grid-cols-11 gap-6 my-14 justify-items-center items-center">
+      <section className="lg:grid lg:grid-cols-11 gap-6 my-14 justify-items-center items-center">
          <Image
             src={"/images/image9.jpg"}
-            className="rounded-full h-full w-full border-4 p-4 border-green-300 col-span-4"
+            className="mb-5 hidden lg:block lg:mb-0 rounded-full h-full w-full border-4 p-4 border-green-300 col-span-4"
             height={500}
             width={350}
             alt="about image"
          ></Image>
 
-         <div className="py-14 px-6 md:px-16 bg-pink-300 bg-[url(/images/image6.jpg)] bg-blend-soft-light bg-cover bg-center bg-opacity-50 rounded-xl col-span-7 h-auto">
-            <h2 className="text-4xl text-green-100 font-bold mb-4">{introductionData.title}</h2>
+         <div className="py-14 px-6 md:px-16 bg-blue-300 bg-[url(/images/image6.jpg)] bg-blend-soft-light bg-cover bg-center bg-opacity-50 rounded-xl col-span-7 h-auto">
+            <h2 className="text-4xl text-white font-bold mb-4">{introductionData.title}</h2>
+            <div className="w-72 h-1 bg-white mb-4"></div>
             <p className="text-gray-900 mb-8 bg-white rounded-lg p-7">{introductionData.description}</p>
-            <div className="text-sm grid grid-cols-2 gap-5">
+            <div className="text-sm grid grid-cols-1 md:grid-cols-2 gap-5">
                {introductionData.uniqueValue.map((point, index) => (
                   <Card
                      key={index}
