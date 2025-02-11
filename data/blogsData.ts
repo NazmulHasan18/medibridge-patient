@@ -29,7 +29,7 @@ const diseaseResearchBlogs = [
       publishedDate: "2025-01-20",
       summary:
          "Alzheimer’s disease is a major concern for aging populations. Dr. Priya Sharma takes you through the current state of Alzheimer’s research and the advancements made in treatment and early diagnosis.",
-      image: "/images/blogs/alzheimers-research.jpg",
+      image: "/images/blogs/alzheimers-research.jpeg",
       link: "/blog/alzheimers-disease-research",
    },
    {
@@ -40,7 +40,7 @@ const diseaseResearchBlogs = [
       publishedDate: "2025-01-15",
       summary:
          "Diabetes is a global epidemic, but the future of its treatment is looking promising. Dr. Ramesh Gupta shares the latest research and how it could lead to better management and even a cure for diabetes.",
-      image: "/images/blogs/diabetes-treatment.jpg",
+      image: "/images/blogs/diabetes-treatment.webp",
       link: "/blog/future-diabetes-treatment",
    },
    {
