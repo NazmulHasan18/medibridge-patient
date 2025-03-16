@@ -42,8 +42,12 @@ const Navbar = () => {
 
             {/* Auth Buttons */}
             <div className="hidden md:flex space-x-4">
-               <Button variant="outline">Sign In</Button>
-               <Button>Sign Up</Button>
+               <Link href="/login">
+                  <Button variant="outline">Sign In</Button>
+               </Link>
+               <Link href="/sign-up">
+                  <Button>Sign Up</Button>
+               </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -73,10 +77,14 @@ const Navbar = () => {
                            {item}
                         </Link>
                      ))}
-                     <Button variant="outline" className="w-full active:scale-95">
-                        Sign In
-                     </Button>
-                     <Button className="w-full active:scale-95">Sign Up</Button>
+                     <Link href="/login">
+                        <Button variant="outline" className="w-full active:scale-95">
+                           Sign In
+                        </Button>
+                     </Link>
+                     <Link href="/sign-up">
+                        <Button className="w-full active:scale-95">Sign Up</Button>
+                     </Link>
                   </nav>
                </SheetContent>
             </Sheet>
