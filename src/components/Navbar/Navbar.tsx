@@ -25,6 +25,17 @@ const Navbar = () => {
 
             {/* Desktop Menu */}
             <ul className="hidden md:flex space-x-6 text-gray-700">
+               <li>
+                  <Link
+                     href={`/`}
+                     className={clsx(
+                        "hover:text-blue-600 font-medium text-black",
+                        path === "/" ? "underline text-primary" : "bg-none"
+                     )}
+                  >
+                     Home
+                  </Link>
+               </li>
                {navItems.map((item, i) => (
                   <li key={i}>
                      <Link
