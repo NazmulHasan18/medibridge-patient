@@ -7,15 +7,7 @@ import { z } from "zod";
 import React from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import FormInput from "@/components/Form/FormInput";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -53,7 +45,7 @@ const AppointmentForm = () => {
       name: "",
       email: "",
       phone: "",
-      appointmentDate: undefined,
+      appointmentDate: new Date(),
       category: "",
       doctor: "",
       description: "",
