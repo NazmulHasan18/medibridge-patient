@@ -3,13 +3,7 @@ import React from "react";
 import hospitalServices from "../../../data/serviceData";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselDots, CarouselItem } from "@/components/ui/carousel";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -51,8 +45,7 @@ const OurServices = async () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="-left-12 bg-white text-black" />
-            <CarouselNext className="-right-12 bg-white text-black" />
+            <CarouselDots />
           </Carousel>
         </div>
       </div>

@@ -141,7 +141,7 @@ const AppointmentForm = () => {
           placeholder="Select Your doctor"
           className="p-6"
         ></FormSelect>
-        <Button type="submit" className="col-span-2 w-fit">
+        <Button type="submit" className="col-span-2 w-fit mx-auto">
           Submit
         </Button>
       </form>

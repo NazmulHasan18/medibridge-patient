@@ -9,7 +9,12 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
 const Navbar = () => {
-  const navItems = ["About", "Services", "Contact"];
+  const navItems = [
+    { name: "About", path: "/about" },
+    { name: "Book Appointment", path: "/book-appointment" },
+    { name: "Services", path: "/services" },
+    { name: "Contact", path: "/contact-us" },
+  ];
   const [open, setOpen] = useState(false);
   const path = usePathname();
 
@@ -30,7 +35,7 @@ const Navbar = () => {
               href={`/`}
               className={clsx(
                 "hover:text-blue-600 font-medium text-black",
-                path === "/" ? "underline text-primary" : "bg-none"
+                path === "/" ? "underline text-primary" : "bg-none",
               )}
             >
               Home
@@ -39,13 +44,13 @@ const Navbar = () => {
           {navItems.map((item, i) => (
             <li key={i}>
               <Link
-                href={`/${item.toLowerCase()}`}
+                href={item.path}
                 className={clsx(
                   "hover:text-blue-600 font-medium text-black",
-                  path === "/" + item.toLowerCase() ? "underline text-primary" : "bg-none"
+                  path === item.path ? "underline text-primary" : "bg-none",
                 )}
               >
-                {item}
+                {item.name}
               </Link>
             </li>
           ))}
@@ -81,11 +86,11 @@ const Navbar = () => {
               {navItems.map((item, i) => (
                 <Link
                   key={i}
-                  href={`/${item.toLowerCase()}`}
+                  href={item.path}
                   onClick={() => setOpen(false)}
                   className="p-2 rounded-md transition-all duration-200 active:bg-gray-100 hover:bg-blue-100 hover:text-gray-800"
                 >
-                  {item}
+                  {item.name}
                 </Link>
               ))}
               <Link href="/login">
