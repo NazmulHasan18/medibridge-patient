@@ -9,6 +9,9 @@ import FormInput from "@/components/Form/FormInput";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "react-toastify";
+import { useLogin } from "@/hooks/auth/useLogin";
+import { isAxiosError } from "axios";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   password: z.string().min(8, { message: "Password must be at least 8 characters." }),
@@ -20,6 +23,8 @@ const FormSchema = z.object({
 
 const LoginPage = () => {
   const [view, setView] = useState(false);
+  const { mutate, isPending } = useLogin();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -30,8 +35,27 @@ const LoginPage = () => {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-    toast.success("Form submitted successfully!");
+    mutate(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        onSuccess: (response) => {
+          toast.success(response?.message || "Account created successfully!");
+          form.reset();
+          router.push("/");
+        },
+        onError: (error) => {
+          const message =
+            isAxiosError<{ message?: string }>(error) && error.response?.data?.message
+              ? error.response.data.message
+              : "Failed to create account. Please try again.";
+
+          toast.error(message);
+        },
+      },
+    );
   }
 
   return (
@@ -63,8 +87,8 @@ const LoginPage = () => {
             </div>
           </div>
           <div className="flex justify-center mt-8">
-            <Button type="submit" className="w-fit">
-              Submit
+            <Button type="submit" className="w-fit" disabled={isPending}>
+              {isPending ? "Submitting..." : "Submit"}
             </Button>
           </div>
         </form>

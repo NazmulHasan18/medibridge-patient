@@ -6,6 +6,10 @@ export type RegisterUserPayload = {
   password: string;
   image?: File;
 };
+export type LoginUserPayload = {
+  email: string;
+  password: string;
+};
 
 export type RegisterUserResponse = {
   success?: boolean;

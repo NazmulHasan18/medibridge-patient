@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axios";
-import { RegisterUserPayload, RegisterUserResponse } from "@/types/auth.types";
+import { LoginUserPayload, RegisterUserPayload, RegisterUserResponse } from "@/types/auth.types";
 
 export const registerUser = async (payload: RegisterUserPayload) => {
   try {
@@ -20,6 +20,18 @@ export const registerUser = async (payload: RegisterUserPayload) => {
         "Content-Type": "multipart/form-data",
       },
     });
+
+    console.log(data);
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+export const loginUser = async (payload: LoginUserPayload) => {
+  try {
+    const { data } = await axiosInstance.post<RegisterUserResponse>("/auth/login", payload);
 
     console.log(data);
 
