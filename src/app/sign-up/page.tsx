@@ -3,27 +3,32 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import React, { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import FormInput from "@/components/Form/FormInput";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
-import FormSelect from "@/components/Form/FormSelect";
+import { toast } from "react-toastify";
+import FormFileInput from "@/components/Form/FormFileInput";
+import { useRegister } from "@/hooks/auth/useRegister";
+import { isAxiosError } from "axios";
+import { useRouter } from "next/navigation";
+
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
 const FormSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Invalid email address"),
     phone: z.string().regex(/^[0-9]{10,15}$/, "Phone must be 10 to 15 digits"),
-    location: z.object({
-      address: z.string().min(5, "Address must be at least 5 characters"),
-      city: z.string().min(2, "City must be at least 2 characters"),
-      country: z.string().min(2, "Country must be at least 2 characters"),
-      pinCode: z.string().regex(/^\d{4,10}$/, "Pin code must be 4 to 10 digits"),
-    }),
+    address: z.string().min(5, "Address must be at least 5 characters"),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
+    image: z
+      .instanceof(File)
+      .optional()
+      .refine((file) => !file || file.type.startsWith("image/"), "Only image files are allowed")
+      .refine((file) => !file || file.size <= MAX_IMAGE_SIZE, "Image must be 2MB or smaller"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
@@ -31,8 +36,9 @@ const FormSchema = z
   });
 
 const SignUpPage = () => {
-  const { toast } = useToast();
   const [view, setView] = useState(false);
+  const { mutate, isPending } = useRegister();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -40,28 +46,39 @@ const SignUpPage = () => {
       name: "",
       email: "",
       phone: "",
-      location: {
-        address: "",
-        city: "",
-        country: "",
-        pinCode: "",
-      },
+      address: "",
       password: "",
       confirmPassword: "",
+      image: undefined,
     },
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log("Form Data Submitted:");
-    console.log(data);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    mutate(
+      {
+        address: data.address,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
+        image: data.image,
+      },
+      {
+        onSuccess: (response) => {
+          toast.success(response?.message || "Account created successfully!");
+          form.reset();
+          router.push("/login");
+        },
+        onError: (error) => {
+          const message =
+            isAxiosError<{ message?: string }>(error) && error.response?.data?.message
+              ? error.response.data.message
+              : "Failed to create account. Please try again.";
+
+          toast.error(message);
+        },
+      },
+    );
   }
 
   return (
@@ -72,10 +89,13 @@ const SignUpPage = () => {
         <div className="mx-auto w-72 h-1 bg-black mb-10"></div>
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="container mx-auto">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="container w-full px-5 md:w-2/3 lg:w-1/3 mx-auto"
+        >
           <div>
             <p className="text-xl font-bold">Personal Details:</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-3 mb-4">
+            <div className="flex flex-col gap-4">
               <FormInput
                 name="email"
                 form={form}
@@ -98,47 +118,23 @@ const SignUpPage = () => {
                 placeholder="Enter your phone number"
                 className="p-6"
               ></FormInput>
-            </div>
-            <p className="text-xl font-bold">Address Details:</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+
               <FormInput
-                name="location.address"
+                name="address"
                 form={form}
                 label="Address"
                 placeholder="Enter your village or street no."
                 className="p-6"
               ></FormInput>
-              <FormInput
-                name="location.city"
+
+              <FormFileInput
+                name="image"
                 form={form}
-                label="City"
-                placeholder="Enter your city."
-                className="p-6"
-              ></FormInput>
-              <FormInput
-                name="location.pinCode"
-                form={form}
-                label="Pin Code"
-                type="number"
-                placeholder="Enter your Pin Code."
-                className="p-6"
-              ></FormInput>
-              <FormSelect
-                name="location.country"
-                form={form}
-                items={[
-                  { text: "India", value: "india" },
-                  { text: "USA", value: "usa" },
-                  { text: "Canada", value: "canada" },
-                  { text: "Australia", value: "australia" },
-                ]}
-                label="Country"
-                placeholder="Select your country"
-                className="p-6"
-              ></FormSelect>
-            </div>
-            <p className="text-xl font-bold">Security Details:</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                label="Profile Image"
+                accept="image/*"
+                formDescription="Upload a JPG, PNG, or WebP image up to 2MB."
+              ></FormFileInput>
+
               <div className="relative">
                 <FormInput
                   name="password"
@@ -174,8 +170,8 @@ const SignUpPage = () => {
             </div>
           </div>
           <div className="flex justify-center mt-8">
-            <Button type="submit" className="w-fit">
-              Submit
+            <Button type="submit" className="w-fit" disabled={isPending}>
+              {isPending ? "Submitting..." : "Submit"}
             </Button>
           </div>
         </form>

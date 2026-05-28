@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { z } from "zod";
 import React from "react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
@@ -37,8 +37,6 @@ const FormSchema = z.object({
 });
 
 const AppointmentForm = () => {
-  const { toast } = useToast();
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -54,14 +52,7 @@ const AppointmentForm = () => {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    toast.success("Appointment form submitted successfully!");
   }
 
   return (

@@ -3,12 +3,12 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import React, { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import FormInput from "@/components/Form/FormInput";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "react-toastify";
 
 const FormSchema = z.object({
   password: z.string().min(8, { message: "Password must be at least 8 characters." }),
@@ -19,7 +19,6 @@ const FormSchema = z.object({
 });
 
 const LoginPage = () => {
-  const { toast } = useToast();
   const [view, setView] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -32,14 +31,7 @@ const LoginPage = () => {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    toast.success("Form submitted successfully!");
   }
 
   return (
