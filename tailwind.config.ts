@@ -12,10 +12,10 @@ export default {
             warning: "#F59E0B", // Orange (Warning)
             error: "#EF4444", // Red (Error)
 
-            background: "#F8FAFC",
+            background: "hsl(var(--background))",
             foreground: "hsl(var(--foreground))",
             card: {
-               DEFAULT: "#E3F2FD",
+               DEFAULT: "hsl(var(--card))",
                foreground: "hsl(var(--card-foreground))",
             },
             popover: {

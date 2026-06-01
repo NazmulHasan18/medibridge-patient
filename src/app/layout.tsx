@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Montserrat, Lora } from "next/font/google";
-// @ts-expect-error -this is common css file
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-import { TanstackQueryProvider } from "@/provider/TanstackQueryProvider";
+import Providers from "@/provider/Provider";
 
 // Define the fonts with the correct variable names
 const montserrat = Montserrat({
@@ -33,14 +32,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.variable} ${lora.variable} antialiased`}>
-        <TanstackQueryProvider>
+        <Providers>
           <Navbar />
           <main>
             {children}
             <Footer></Footer>
           </main>
           <ToastContainer />
-        </TanstackQueryProvider>
+        </Providers>
       </body>
     </html>
   );

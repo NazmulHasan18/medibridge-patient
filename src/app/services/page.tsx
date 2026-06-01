@@ -36,12 +36,12 @@ const services = [
 
 const ServicesPage = () => {
    return (
-      <div className="bg-gray-50 text-gray-800 min-h-screen p-6">
+      <div className="min-h-screen bg-background p-6 text-foreground">
          <div className="max-w-6xl mx-auto space-y-12">
             {/* Header */}
             <section className="text-center py-10">
                <h1 className="text-4xl font-bold text-blue-600 mb-4">Our Services</h1>
-               <p className="text-lg text-gray-600">Enhancing healthcare through smart digital solutions.</p>
+               <p className="text-lg text-muted-foreground">Enhancing healthcare through smart digital solutions.</p>
             </section>
 
             {/* Services Grid */}
@@ -49,11 +49,11 @@ const ServicesPage = () => {
                {services.map((service, index) => (
                   <div
                      key={index}
-                     className="bg-white rounded-2xl shadow p-6 space-y-3 hover:shadow-md transition duration-300"
+                     className="space-y-3 rounded-2xl border border-border bg-card p-6 text-card-foreground shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md"
                   >
                      <div>{service.icon}</div>
                      <h3 className="text-xl font-semibold">{service.title}</h3>
-                     <p className="text-gray-600">{service.description}</p>
+                     <p className="text-muted-foreground">{service.description}</p>
                   </div>
                ))}
             </section>

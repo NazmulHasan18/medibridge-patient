@@ -8,9 +8,10 @@ import OurServices from "@/components/HomePage/OurServices";
 import Testimonials from "@/components/HomePage/Testimonials";
 import WhyWe from "@/components/HomePage/WhyWe";
 import { getServerSession } from "next-auth";
+import { authOptions } from "./helpers/authOptions";
 
 export default async function Home() {
-  const sessions = await getServerSession();
+  const sessions = await getServerSession(authOptions);
 
   console.log(sessions);
   return (

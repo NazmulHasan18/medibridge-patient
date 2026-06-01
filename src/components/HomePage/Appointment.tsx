@@ -6,9 +6,9 @@ import { Button } from "../ui/button";
 
 const Appointment = () => {
   return (
-    <section className="bg-gray-200">
+    <section className="bg-gray-200 dark:bg-gray-800">
       <div className="container mx-auto p-10">
-        <div className="md:grid md:grid-cols-2 lg:grid-cols-3 items-center bg-white rounded-md">
+        <div className="md:grid md:grid-cols-2 lg:grid-cols-3 items-center bg-white dark:bg-gray-950 rounded-md">
           <Image
             src={"/images/appointment3.jpg"}
             width={600}

@@ -26,7 +26,7 @@ const OurServices = async () => {
               {hospitalServices.map((service) => (
                 <CarouselItem key={service.id} className="md:basis-1/2 lg:basis-1/3">
                   <Link href={`/service/${service.id}`}>
-                    <Card className="bg-white hover:bg-gray-100 flex flex-row min-h-[250px]">
+                    <Card className="flex flex-row min-h-[250px]">
                       <Image
                         src={service.image}
                         height={250}

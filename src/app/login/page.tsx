@@ -33,7 +33,7 @@ const LoginPage = () => {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       const response = await signIn("credentials", {
-        username: data.email,
+        email: data.email,
         password: data.password,
         callbackUrl: "/",
         redirect: true,
