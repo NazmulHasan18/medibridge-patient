@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 
 import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
 
 const FormSchema = z.object({
   password: z.string().min(8, { message: "Password must be at least 8 characters." }),
@@ -36,9 +37,11 @@ const LoginPage = () => {
         email: data.email,
         password: data.password,
         callbackUrl: "/",
-        redirect: true,
+        redirect: false,
       });
-
+      if (response?.error) {
+        toast.error(response?.error || "Invalid email or password.");
+      }
       console.log(response);
     } catch (error) {
       console.log(error);

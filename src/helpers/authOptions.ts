@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axios";
+import axios from "axios";
 import { NextAuthOptions } from "next-auth";
 
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -51,8 +52,12 @@ export const authOptions: NextAuthOptions = {
             email: credentials.email,
             password: credentials.password,
           });
-
+          console.log(data);
           const { user, accessToken } = data.data;
+
+          if (!user) {
+            return null;
+          }
 
           return {
             id: user.id,
@@ -64,8 +69,14 @@ export const authOptions: NextAuthOptions = {
             token: accessToken, // ONLY store access token
           };
         } catch (error) {
-          console.error(error);
-          return null;
+          if (axios.isAxiosError(error)) {
+            const message =
+              error.response?.data?.message || error.response?.statusText || "Authentication failed.";
+
+            throw new Error(message);
+          }
+
+          throw error;
         }
       },
     }),

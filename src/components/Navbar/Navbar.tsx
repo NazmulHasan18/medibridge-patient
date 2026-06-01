@@ -26,7 +26,10 @@ const Navbar = () => {
   const userImage = session?.user?.image || sessionData?.picture;
 
   const navItems = [
-    { name: "Book Appointment", path: "/book-appointment" },
+    {
+      name: "Dashboard",
+      path: `/${session?.user?.role.toLowerCase() === "super_admin" ? "admin" : session?.user?.role.toLowerCase()}`,
+    },
     { name: "Services", path: "/services" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact-us" },

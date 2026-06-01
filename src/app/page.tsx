@@ -7,13 +7,9 @@ import OurDoctors from "@/components/HomePage/OurDoctors";
 import OurServices from "@/components/HomePage/OurServices";
 import Testimonials from "@/components/HomePage/Testimonials";
 import WhyWe from "@/components/HomePage/WhyWe";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./helpers/authOptions";
+import React from "react";
 
-export default async function Home() {
-  const sessions = await getServerSession(authOptions);
-
-  console.log(sessions);
+const Main = () => {
   return (
     <div>
       <HeroSection></HeroSection>
@@ -29,4 +25,6 @@ export default async function Home() {
       <Blogs></Blogs>
     </div>
   );
-}
+};
+
+export default Main;

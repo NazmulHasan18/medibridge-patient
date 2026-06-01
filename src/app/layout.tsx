@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Montserrat, Lora } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
-import Navbar from "@/components/Navbar/Navbar";
-import Footer from "@/components/Footer/Footer";
 import Providers from "@/provider/Provider";
+import SiteChrome from "@/components/Layout/SiteChrome";
 
 // Define the fonts with the correct variable names
 const montserrat = Montserrat({
@@ -33,11 +32,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${montserrat.variable} ${lora.variable} antialiased`}>
         <Providers>
-          <Navbar />
-          <main>
+          <SiteChrome>
             {children}
-            <Footer></Footer>
-          </main>
+          </SiteChrome>
           <ToastContainer />
         </Providers>
       </body>
