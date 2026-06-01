@@ -7,21 +7,25 @@ import OurDoctors from "@/components/HomePage/OurDoctors";
 import OurServices from "@/components/HomePage/OurServices";
 import Testimonials from "@/components/HomePage/Testimonials";
 import WhyWe from "@/components/HomePage/WhyWe";
+import { getServerSession } from "next-auth";
 
-export default function Home() {
-   return (
-      <div>
-         <HeroSection></HeroSection>
-         <div className="container mx-auto lg:p-10 p-5">
-            <InfoCard></InfoCard>
-            <Introduction></Introduction>
-         </div>
-         <OurServices></OurServices>
-         <WhyWe></WhyWe>
-         <Appointment></Appointment>
-         <OurDoctors></OurDoctors>
-         <Testimonials></Testimonials>
-         <Blogs></Blogs>
+export default async function Home() {
+  const sessions = await getServerSession();
+
+  console.log(sessions);
+  return (
+    <div>
+      <HeroSection></HeroSection>
+      <div className="container mx-auto lg:p-10 p-5">
+        <InfoCard></InfoCard>
+        <Introduction></Introduction>
       </div>
-   );
+      <OurServices></OurServices>
+      <WhyWe></WhyWe>
+      <Appointment></Appointment>
+      <OurDoctors></OurDoctors>
+      <Testimonials></Testimonials>
+      <Blogs></Blogs>
+    </div>
+  );
 }
