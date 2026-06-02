@@ -83,6 +83,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
+      if (!token) return null;
       // initial login
       if (user) {
         token.id = Number(user.id);
@@ -104,8 +105,6 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      console.log("SESSION CALLBACK", { session, token });
-
       session.user.id = token.id;
       session.user.role = token.role;
       session.user.publicId = token.publicId;

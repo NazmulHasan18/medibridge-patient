@@ -1,23 +1,22 @@
-// components/OurDoctors.tsx
 "use client";
-
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useDoctors } from "@/hooks/doctor/useDoctor";
+import { Doctor } from "@/types/doctor.types";
 import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { Doctor } from "@/types/doctor.types";
-import { useDoctors } from "@/hooks/doctor/useDoctor";
 
-const OurDoctors = () => {
+const DoctorsList = () => {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [page, setPage] = useState(1);
 
   const { data, isLoading, isError, error, isFetching } = useDoctors({
-    page: 1,
-    limit: 6,
+    page,
+    limit: 10,
     // send specialization only when not "All"
     specialization: activeCategory === "All" ? undefined : activeCategory,
   });
@@ -38,7 +37,13 @@ const OurDoctors = () => {
       </div>
 
       <div className="my-5">
-        <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+        <Tabs
+          value={activeCategory}
+          onValueChange={(val) => {
+            setActiveCategory(val);
+            setPage(1);
+          }}
+        >
           <TabsList className="w-full flex-wrap h-full gap-1 bg-transparent mx-auto my-5 md:gap-5">
             {categories.map((category, i) => (
               <TabsTrigger
@@ -68,14 +73,25 @@ const OurDoctors = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <div className="flex justify-center items-center">
-        <Button>Show More</Button>
+      <div className="flex items-center justify-center gap-4 mt-6">
+        <Button disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+          Prev
+        </Button>
+
+        <div className="text-sm">
+          Page {data?.data?.meta?.page ?? page} of {data?.data?.meta?.totalPages ?? 1}
+        </div>
+
+        <Button
+          disabled={!!data?.data?.meta && page >= (data?.data?.meta?.totalPages ?? 1)}
+          onClick={() => setPage((p) => p + 1)}
+        >
+          Next
+        </Button>
       </div>
     </section>
   );
 };
-
-export default OurDoctors;
 
 const DoctorCard = ({ doctor }: { doctor: Doctor }) => (
   <Card className="text-center bg-transparent border-blue-400">
@@ -102,7 +118,7 @@ const DoctorCard = ({ doctor }: { doctor: Doctor }) => (
 
 const DoctorGridSkeleton = () => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    {Array.from({ length: 6 }).map((_, i) => (
+    {Array.from({ length: 10 }).map((_, i) => (
       <div key={i} className="border border-blue-400 rounded-lg p-6 space-y-4 animate-pulse">
         <div className="rounded-full h-[200px] w-[200px] bg-gray-200 mx-auto" />
         <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto" />
@@ -113,3 +129,5 @@ const DoctorGridSkeleton = () => (
     ))}
   </div>
 );
+
+export default DoctorsList;

@@ -34,6 +34,7 @@ const Navbar = () => {
           },
         ]
       : []),
+    { name: "Doctors", path: "/doctors" },
     { name: "Services", path: "/services" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact-us" },
@@ -47,7 +48,10 @@ const Navbar = () => {
   };
 
   const profileButton = (
-    <Link href="/profile" className="group relative flex h-10 w-10 items-center justify-center">
+    <Link
+      href={`/${session?.user.role.toLowerCase() === "super_admin" ? "admin" : session?.user.role.toLowerCase()}/profile`}
+      className="group relative flex h-10 w-10 items-center justify-center"
+    >
       <span
         className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-border bg-background shadow-sm transition-colors hover:bg-accent"
         title={userName}
@@ -88,7 +92,11 @@ const Navbar = () => {
 
   const mobileAuthButtons = isAuthenticated ? (
     <div className="space-y-3 pt-2">
-      <Link href="/profile" onClick={() => setOpen(false)} className="block">
+      <Link
+        href={`/${session.user.role.toLowerCase() === "super_admin" ? "admin" : session.user.role.toLowerCase()}/profile`}
+        onClick={() => setOpen(false)}
+        className="block"
+      >
         <Button variant="outline" className="w-full justify-start gap-3 active:scale-95">
           {userImage ? (
             <Image

@@ -19,6 +19,7 @@ import {
   UserCog,
   Users,
   ShieldCheck,
+  HomeIcon,
 } from "lucide-react";
 import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
@@ -122,6 +123,14 @@ const DashboardShell = ({ children }: { children: React.ReactNode }) => {
   const navLinks = (
     <div className="flex flex-col justify-between">
       <nav className="space-y-1">
+        <Link
+          href={"/"}
+          onClick={() => setOpen(false)}
+          className="flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+        >
+          <HomeIcon className="h-4 w-4 shrink-0" />
+          <span className="truncate">Home</span>
+        </Link>
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href;

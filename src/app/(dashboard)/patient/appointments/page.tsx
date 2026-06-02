@@ -1,17 +1,17 @@
-import { CalendarCheck } from "lucide-react";
-import SectionPage from "@/components/Dashboard/SectionPage";
+import AppointmentForm from "@/components/AppointmentForm/AppointmentForm";
+import React from "react";
 
-export default function PatientAppointmentsPage() {
+const bookAppointment = () => {
   return (
-    <SectionPage
-      title="My Appointments"
-      description="View upcoming visits, telemedicine sessions, and appointment history."
-      icon={CalendarCheck}
-      items={[
-        { title: "General consultation", meta: "June 8, 2026 - 9:30 AM", status: "Confirmed" },
-        { title: "Cardiology follow-up", meta: "June 14, 2026 - 11:00 AM", status: "Scheduled" },
-        { title: "Video consultation", meta: "June 20, 2026 - 5:00 PM", status: "Online" },
-      ]}
-    />
+    <div className="col-span-2 bg-background p-10 text-foreground">
+      <div className="w-fit text-center mx-auto">
+        <h1 className="text-4xl font-semibold">Appointment</h1>
+        <p className="text-2xl font-bold text-muted-foreground">Get Your Appointment</p>
+        <div className="mb-10 h-1 w-full bg-primary"></div>
+      </div>
+      <AppointmentForm></AppointmentForm>
+    </div>
   );
-}
+};
+
+export default bookAppointment;
