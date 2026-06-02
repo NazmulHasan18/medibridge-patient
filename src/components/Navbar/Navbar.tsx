@@ -26,14 +26,19 @@ const Navbar = () => {
   const userImage = session?.user?.image || sessionData?.picture;
 
   const navItems = [
-    {
-      name: "Dashboard",
-      path: `/${session?.user?.role.toLowerCase() === "super_admin" ? "admin" : session?.user?.role.toLowerCase()}`,
-    },
+    ...(session?.user
+      ? [
+          {
+            name: "Dashboard",
+            path: `/${session.user.role.toLowerCase() === "super_admin" ? "admin" : session.user.role.toLowerCase()}`,
+          },
+        ]
+      : []),
     { name: "Services", path: "/services" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact-us" },
   ];
+
   const [open, setOpen] = useState(false);
   const path = usePathname();
 

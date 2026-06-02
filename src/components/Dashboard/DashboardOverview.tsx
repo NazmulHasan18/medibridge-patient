@@ -72,7 +72,10 @@ const DashboardOverview = ({
           </div>
           <div className="divide-y divide-border">
             {activities.map((activity) => (
-              <div key={activity.title} className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div
+                key={activity.title}
+                className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"
+              >
                 <div>
                   <p className="font-medium">{activity.title}</p>
                   <p className="text-sm text-muted-foreground">{activity.meta}</p>
@@ -89,7 +92,10 @@ const DashboardOverview = ({
           <h2 className="text-xl font-semibold">{sideTitle}</h2>
           <div className="mt-4 space-y-3">
             {sideItems.map((item) => (
-              <div key={item} className="rounded-md border border-border bg-background p-3 text-sm text-muted-foreground">
+              <div
+                key={item}
+                className="rounded-md border border-border bg-background p-3 text-sm text-muted-foreground"
+              >
                 {item}
               </div>
             ))}

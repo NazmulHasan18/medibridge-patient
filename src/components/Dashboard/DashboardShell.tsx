@@ -30,12 +30,13 @@ import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
 
 const navByRole = {
   super_admin: [
-    { label: "Overview", href: "/super-admin", icon: LayoutDashboard },
-    { label: "Admins", href: "/super-admin/admins", icon: ShieldCheck },
-    { label: "Doctors", href: "/super-admin/doctors", icon: Stethoscope },
-    { label: "Patients", href: "/super-admin/patients", icon: Users },
-    { label: "Reports", href: "/super-admin/reports", icon: FileText },
-    { label: "Settings", href: "/super-admin/settings", icon: Settings },
+    { label: "Overview", href: "/admin", icon: LayoutDashboard },
+    { label: "Admins", href: "/admin/admins", icon: ShieldCheck },
+    { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
+    { label: "Doctors", href: "/admin/doctors", icon: Stethoscope },
+    { label: "Patients", href: "/admin/patients", icon: Users },
+    { label: "Reports", href: "/admin/reports", icon: FileText },
+    { label: "Settings", href: "/admin/settings", icon: Settings },
   ],
   admin: [
     { label: "Overview", href: "/admin", icon: LayoutDashboard },
@@ -66,7 +67,7 @@ const navByRole = {
 type Role = keyof typeof navByRole;
 
 const roleHome: Record<Role, string> = {
-  super_admin: "/super-admin",
+  super_admin: "/admin",
   admin: "/admin",
   doctor: "/doctor",
   patient: "/patient",
@@ -119,28 +120,38 @@ const DashboardShell = ({ children }: { children: React.ReactNode }) => {
 
   // ── Shared nav link list ─────────────────────────────────────────────────
   const navLinks = (
-    <nav className="space-y-1">
-      {navItems.map((item) => {
-        const Icon = item.icon;
-        const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={() => setOpen(false)}
-            className={clsx(
-              "flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors",
-              active
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
-            )}
-          >
-            <Icon className="h-4 w-4 shrink-0" />
-            <span className="truncate">{item.label}</span>
-          </Link>
-        );
-      })}
-    </nav>
+    <div className="flex flex-col justify-between">
+      <nav className="space-y-1">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const active = pathname === item.href;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              className={clsx(
+                "flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium transition-colors",
+                active
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+              )}
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              <span className="truncate">{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
+      <Button
+        variant="destructive"
+        className="sm:hidden h-10 w-full rounded-md px-3 text-sm font-medium transition-colors inline-flex"
+        onClick={() => signOut({ callbackUrl: "/login" })}
+      >
+        <LogOut className="h-4 w-4" />
+        Sign Out
+      </Button>
+    </div>
   );
 
   // ── Loading / unauthenticated states ─────────────────────────────────────
