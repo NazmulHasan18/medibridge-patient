@@ -69,7 +69,9 @@ const OurDoctors = () => {
         </Tabs>
       </div>
       <div className="flex justify-center items-center">
-        <Button>Show More</Button>
+        <Link href="/doctors" className="mt-10">
+          <Button>Show More</Button>
+        </Link>
       </div>
     </section>
   );

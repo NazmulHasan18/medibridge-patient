@@ -1,5 +1,6 @@
+import axiosInstance from "@/lib/axios";
 import { fetcher } from "@/lib/fetcher";
-import { DoctorResponse } from "@/types/doctor.types";
+import { DoctorDetailResponse, DoctorResponse, UpdateDoctorPayload } from "@/types/doctor.types";
 
 export type DoctorParams = {
   search?: string;
@@ -16,4 +17,32 @@ export const getDoctors = (params: DoctorParams = {}): Promise<DoctorResponse> =
   ).toString();
 
   return fetcher<DoctorResponse>(`/doctors?${query}`);
+};
+
+export const getDoctorById = (id: string, token: string): Promise<DoctorDetailResponse> => {
+  return fetcher<DoctorDetailResponse>(`/doctors/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const updateDoctor = async (id: string, payload: UpdateDoctorPayload, token: string) => {
+  const { data } = await axiosInstance.patch(`/doctors/${id}`, payload, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return data;
+};
+
+export const deleteDoctor = async (id: string, token: string) => {
+  const { data } = await axiosInstance.delete(`/doctors/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return data;
 };

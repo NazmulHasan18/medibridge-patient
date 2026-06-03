@@ -20,6 +20,7 @@ export type Doctor = {
   bio: string;
   createdAt: string;
   updatedAt: string;
+  deletedAt?: string | null;
   user: DoctorUser;
 };
 
@@ -37,5 +38,28 @@ export type DoctorResponse = {
     data: Doctor[];
     meta: PaginationMeta;
     specializations: string[];
+  };
+};
+
+export type DoctorDetailResponse = {
+  success: boolean;
+  message: string;
+  data: Doctor;
+};
+
+export type UpdateDoctorPayload = {
+  specialization?: string;
+  experience?: number;
+  consultationFee?: number;
+  qualification?: string;
+  bio?: string;
+};
+
+export type AdminDoctorsResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    data: Doctor[];
+    meta?: PaginationMeta;
   };
 };

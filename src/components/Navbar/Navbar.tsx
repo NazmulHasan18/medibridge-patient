@@ -46,6 +46,7 @@ const Navbar = () => {
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/login" });
   };
+  console.log(userImage);
 
   const profileButton = (
     <Link
@@ -60,7 +61,7 @@ const Navbar = () => {
           <Image
             width={40}
             height={40}
-            src={userImage}
+            src={userImage.trim()}
             alt={userName}
             className="h-full w-full object-cover"
           />
@@ -102,7 +103,7 @@ const Navbar = () => {
             <Image
               width={30}
               height={30}
-              src={userImage}
+              src={userImage.trim()}
               alt={userName}
               className="h-7 w-7 rounded-full object-cover"
             />
