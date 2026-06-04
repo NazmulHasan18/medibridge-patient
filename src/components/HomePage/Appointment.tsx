@@ -29,7 +29,7 @@ const Appointment = () => {
                 </p>
               </div>
               <div className="flex flex-col gap-4 sm:flex-row justify-center items-center">
-                <Link href="/book-appointment">
+                <Link href="/patient/appointments/create">
                   <Button className="lg:text-lg lg:px-7 lg:py-6" variant="outline" size="lg">
                     <BriefcaseMedical className="text-xl" /> Book an Appointment
                   </Button>

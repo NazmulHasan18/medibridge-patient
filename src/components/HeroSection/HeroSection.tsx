@@ -46,7 +46,7 @@ const HeroSection = () => {
                   <h1 className="text-4xl font-extrabold sm:text-5xl md:text-6xl mb-6">{element.title}</h1>
                   <p className="text-lg sm:text-xl mb-8">{element.description}</p>
                   <div className="flex flex-col sm:flex-row gap-4 pb-4 items-center justify-center md:justify-start">
-                    <Link href="/book-appointment">
+                    <Link href="/patient/appointments/create">
                       <Button className="text-lg px-7 py-6" variant="default" size="lg">
                         <BriefcaseMedical className="text-xl" /> Book an Appointment
                       </Button>

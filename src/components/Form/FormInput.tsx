@@ -43,7 +43,7 @@ const FormInput = <T extends FieldValues>({
               className={clsx(
                 "focus-visible:ring-0",
                 className ? className : "",
-                "rounded-full border-pink-400 bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-pink-400 hover:bg-accent",
+                "rounded-full border-blue-400 bg-background text-foreground placeholder:text-muted-foreground focus-visible:outline-blue-400 hover:bg-accent",
               )}
               type={type}
               placeholder={placeholder}

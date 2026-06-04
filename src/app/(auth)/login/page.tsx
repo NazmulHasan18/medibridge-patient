@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import FormInput from "@/components/Form/FormInput";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
@@ -23,7 +23,6 @@ const FormSchema = z.object({
 
 const LoginPage = () => {
   const [view, setView] = useState(false);
-
   const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -52,7 +51,7 @@ const LoginPage = () => {
         password: data.password,
         redirect: false,
       });
-      console.log(response);
+
       if (response?.error) {
         toast.error(response?.error || "Invalid email or password.");
       } else {
@@ -106,8 +105,15 @@ const LoginPage = () => {
             </div>
           </div>
           <div className="flex justify-center mt-8">
-            <Button type="submit" className="w-fit">
-              Submit
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
             </Button>
           </div>
         </form>

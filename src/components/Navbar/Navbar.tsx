@@ -46,7 +46,6 @@ const Navbar = () => {
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/login" });
   };
-  console.log(userImage);
 
   const profileButton = (
     <Link

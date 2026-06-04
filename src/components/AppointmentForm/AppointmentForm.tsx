@@ -14,6 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import FormSelect from "../Form/FormSelect";
+import { useDoctors } from "@/hooks/doctor/useDoctor";
 
 const FormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -50,6 +51,22 @@ const AppointmentForm = () => {
     },
   });
 
+  const activeCategory = form.watch("category");
+  const { data, isLoading, isError, error, isFetching } = useDoctors({
+    page: 1,
+    limit: 10,
+    specialization: activeCategory,
+  });
+
+  if (isError) {
+    toast.error(error instanceof Error ? error.message : "Something went wrong");
+  }
+
+  const doctors = data?.data?.data ?? [];
+  const categories = data?.data?.specializations?.map((data) => ({ text: data, value: data })) || [];
+
+  const doctorsOptions = doctors.map((doc) => ({ text: doc?.user?.name, value: doc.publicId })) || [];
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
     toast.success("Appointment form submitted successfully!");
@@ -57,7 +74,10 @@ const AppointmentForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="md:grid grid-cols-2 gap-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={`md:grid grid-cols-2 gap-4 ${isFetching ? "opacity-50" : "opacity-100"}`}
+      >
         <FormInput
           name="name"
           form={form}
@@ -92,7 +112,7 @@ const AppointmentForm = () => {
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-full rounded-full border-pink-400 bg-transparent pl-3 p-6 text-left font-normal",
+                        "w-full rounded-full border-blue-400 bg-transparent pl-3 p-6 text-left font-normal",
                         !field.value && "text-muted-foreground",
                       )}
                     >
@@ -118,7 +138,7 @@ const AppointmentForm = () => {
 
         <FormSelect
           form={form}
-          items={[{ text: "abc", value: "abc" }]}
+          items={categories}
           label="Select Category"
           name="category"
           placeholder="Select Your category"
@@ -126,11 +146,11 @@ const AppointmentForm = () => {
         ></FormSelect>
         <FormSelect
           form={form}
-          items={[{ text: "abc", value: "abc" }]}
+          items={doctorsOptions}
           label="Select Doctor"
           name="doctor"
           placeholder="Select Your doctor"
-          className="p-6"
+          className={`p-6 ${isLoading} && disabled`}
         ></FormSelect>
         <Button type="submit" className="col-span-2 w-fit mx-auto">
           Submit

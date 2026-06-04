@@ -7,13 +7,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function refreshAccessToken(token: any) {
   try {
-    const { data } = await axiosInstance.post(
-      "/auth/refresh-token",
-      {}, // empty body
-      {
-        withCredentials: true, // IMPORTANT: sends cookie
+    const { data } = await axiosInstance.get("/auth/refresh-token", {
+      headers: {
+        Cookie: `sessionToken=${token.sessionToken}`,
       },
-    );
+    });
 
     return {
       ...token,
@@ -21,7 +19,7 @@ async function refreshAccessToken(token: any) {
       accessTokenExpires: Date.now() + 15 * 60 * 1000,
     };
   } catch (error) {
-    console.error("Refresh token failed", error);
+    console.error("Refresh token failed", error.response);
 
     return {
       ...token,
@@ -52,8 +50,8 @@ export const authOptions: NextAuthOptions = {
             email: credentials.email,
             password: credentials.password,
           });
-          console.log(data);
-          const { user, accessToken } = data.data;
+
+          const { user, accessToken, sessionToken } = data.data;
 
           if (!user) {
             return null;
@@ -66,7 +64,8 @@ export const authOptions: NextAuthOptions = {
             role: user.role,
             publicId: user.publicId,
             image: user.profileImage,
-            token: accessToken, // ONLY store access token
+            token: accessToken,
+            sessionToken, // ONLY store access token
           };
         } catch (error) {
           if (axios.isAxiosError(error)) {
@@ -90,7 +89,7 @@ export const authOptions: NextAuthOptions = {
         token.role = user.role;
         token.publicId = user.publicId;
         token.token = user.token;
-
+        token.sessionToken = user.sessionToken;
         // optional: store expiry if backend gives it
         token.accessTokenExpires = Date.now() + 15 * 60 * 1000;
       }

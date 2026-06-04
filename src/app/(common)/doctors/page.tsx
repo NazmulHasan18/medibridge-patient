@@ -1,12 +1,8 @@
 "use client";
+import { DoctorCard } from "@/components/DoctorCard/DoctorCard";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDoctors } from "@/hooks/doctor/useDoctor";
-import { Doctor } from "@/types/doctor.types";
-import { User } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -92,29 +88,6 @@ const DoctorsList = () => {
     </section>
   );
 };
-
-const DoctorCard = ({ doctor }: { doctor: Doctor }) => (
-  <Card className="text-center bg-transparent border-blue-400">
-    <CardHeader className="bg-transparent">
-      <div className="rounded-full h-[200px] overflow-hidden flex items-center justify-center w-fit mx-auto border-[6px] border-primary mb-4">
-        {doctor.user?.profileImage ? (
-          <Image src={doctor.user.profileImage} alt={doctor.user.name} height={190} width={190} />
-        ) : (
-          <User className="w-52 h-52" />
-        )}
-      </div>
-    </CardHeader>
-    <CardContent className="space-y-4">
-      <CardTitle>{doctor.user.name}</CardTitle>
-      <CardDescription>{doctor.experience} years +</CardDescription>
-      <CardTitle>{doctor.specialization}</CardTitle>
-      <CardDescription>{doctor.bio}</CardDescription>
-      <Link href="/patient">
-        <Button>Book Appointment</Button>
-      </Link>
-    </CardContent>
-  </Card>
-);
 
 const DoctorGridSkeleton = () => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

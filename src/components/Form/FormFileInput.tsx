@@ -42,7 +42,7 @@ const FormFileInput = <T extends FieldValues>({
               type="file"
               accept={accept}
               className={clsx(
-                "h-auto cursor-pointer border-pink-400 rounded-full px-5 py-3 focus-visible:outline-pink-400 focus-visible:ring-0 hover:bg-gray-200",
+                "h-auto cursor-pointer border-blue-400 rounded-full px-5 py-3 focus-visible:outline-blue-400 focus-visible:ring-0 hover:bg-gray-200",
                 className,
               )}
               onChange={(event) => onChange(event.target.files?.[0])}

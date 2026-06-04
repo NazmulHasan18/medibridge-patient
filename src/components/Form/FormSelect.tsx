@@ -43,7 +43,7 @@ const FormSelect = <T extends FieldValues>({
               className={cn(
                 "focus-visible:ring-0",
                 className ? className : "",
-                "rounded-full border-pink-400 bg-background text-foreground focus-visible:outline-pink-400 hover:bg-accent",
+                "rounded-full border-blue-400 bg-background text-foreground focus-visible:outline-blue-400 hover:bg-accent",
               )}
             >
               <SelectTrigger>
