@@ -32,7 +32,8 @@ const Blogs = () => {
                   <CardDescription>{blog.specialty}</CardDescription>
                 </CardContent>
                 <CardDescription>
-                  <span className="font-semibold text-gray-900">Publish Date: </span> {blog.publishedDate}
+                  <span className="font-semibold text-gray-900 dark:text-gray-200">Publish Date : </span>{" "}
+                  {blog.publishedDate}
                 </CardDescription>
                 <CardDescription>{blog.summary}</CardDescription>
                 <Button variant="link" className="p-0">

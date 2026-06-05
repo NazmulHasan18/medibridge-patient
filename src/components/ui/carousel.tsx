@@ -265,8 +265,8 @@ const CarouselDotButton = React.forwardRef<
       type="button"
       aria-current={isSelected ? "true" : undefined}
       className={cn(
-        "h-2.5 w-2.5 rounded-full bg-muted-foreground/50 transition-all hover:bg-muted-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        isSelected && "bg-white hover:bg-white w-4",
+        "bg-muted-foreground/50 transition-all hover:bg-muted-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        isSelected ? "bg-white h-1 w-1 rounded-full hover:bg-white" : "h-1 w-7 rounded-full ",
         className,
       )}
       {...props}

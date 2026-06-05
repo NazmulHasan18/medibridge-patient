@@ -41,7 +41,7 @@ const OurDoctors = () => {
               <TabsTrigger
                 key={i}
                 value={category}
-                className="p-3 rounded-full data-[state=active]:border-2 data-[state=active]:border-pink-400 border-2 border-transparent hover:border-pink-500"
+                className="p-3 rounded-full data-[state=active]:border-2 data-[state=active]:border-blue-400 border-2 border-transparent hover:border-blue-500"
               >
                 {category}
               </TabsTrigger>

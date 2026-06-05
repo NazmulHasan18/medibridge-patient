@@ -45,11 +45,11 @@ const InfoCard = () => {
             info.color ? info.color : "",
           )}
         >
-          <CardHeader className="pb-2">
+          <CardHeader className="pb-2 text-black">
             <CardTitle className="text-lg flex gap-4 items-center justify-center pb-4">
               {info.icon} {info.title}
             </CardTitle>
-            <CardDescription>{info.description}</CardDescription>
+            <CardDescription className="text-gray-700">{info.description}</CardDescription>
           </CardHeader>
           <CardFooter>
             <Link href="/about-us">

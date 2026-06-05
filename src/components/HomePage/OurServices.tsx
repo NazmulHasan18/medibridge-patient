@@ -10,7 +10,7 @@ import Link from "next/link";
 const OurServices = async () => {
   return (
     <section className="bg-blue-900 text-white">
-      <div className="container mx-auto p-10">
+      <div className="container mx-auto p-10 pb-5">
         <h1 className="text-4xl font-semibold">Our Services</h1>
         <p className="text-2xl">Comprehensive Healthcare Services at Your Fingertips</p>
         <div className="w-full md:w-96 h-1 bg-white"></div>
@@ -45,7 +45,7 @@ const OurServices = async () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselDots />
+            <CarouselDots className="mt-6" />
           </Carousel>
         </div>
       </div>

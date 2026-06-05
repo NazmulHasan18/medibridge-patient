@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselDots, CarouselItem } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BriefcaseMedical, HeadsetIcon } from "lucide-react";
@@ -34,7 +28,7 @@ const HeroSection = () => {
 
   return (
     <div>
-      <Carousel>
+      <Carousel className="relative">
         <CarouselContent className=" h-[500px]">
           {heroContent.map((element, i) => (
             <CarouselItem key={i}>
@@ -52,7 +46,11 @@ const HeroSection = () => {
                       </Button>
                     </Link>
                     <Link href="/contact-us">
-                      <Button className="text-lg px-7 py-6" variant="outline" size="lg">
+                      <Button
+                        className="text-lg px-7 py-6 dark:text-blue-400 dark:hover:text-white"
+                        variant="outline"
+                        size="lg"
+                      >
                         <HeadsetIcon size={40} />
                         Contact Us
                       </Button>
@@ -63,8 +61,7 @@ const HeroSection = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="bg-transparent" />
-        <CarouselNext className="bg-transparent" />
+        <CarouselDots className="bottom-10 left-[48%] absolute" />
       </Carousel>
     </div>
   );

@@ -38,7 +38,7 @@ const FormSelect = <T extends FieldValues>({
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select value={field.value ?? ""} onValueChange={field.onChange}>
             <FormControl
               className={cn(
                 "focus-visible:ring-0",

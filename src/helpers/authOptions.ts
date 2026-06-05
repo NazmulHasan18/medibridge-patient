@@ -13,13 +13,15 @@ async function refreshAccessToken(token: any) {
       },
     });
 
+    console.log("refreshToken", data);
+
     return {
       ...token,
       token: data.token,
       accessTokenExpires: Date.now() + 15 * 60 * 1000,
     };
   } catch (error) {
-    console.error("Refresh token failed", error.response);
+    console.error("Refresh token failed", axios.isAxiosError(error) ? error.response?.data : error);
 
     return {
       ...token,
@@ -107,7 +109,10 @@ export const authOptions: NextAuthOptions = {
       session.user.id = token.id;
       session.user.role = token.role;
       session.user.publicId = token.publicId;
+      session.user.token = token.token;
+      session.user.sessionToken = token.sessionToken;
       session.token = token.token;
+      session.sessionToken = token.sessionToken;
 
       return session;
     },
