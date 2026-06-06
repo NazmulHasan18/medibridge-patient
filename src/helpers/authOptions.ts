@@ -13,12 +13,10 @@ async function refreshAccessToken(token: any) {
       },
     });
 
-    console.log("refreshToken", data);
-
     return {
       ...token,
-      token: data.token,
-      accessTokenExpires: Date.now() + 15 * 60 * 1000,
+      token: data?.data?.accessToken,
+      accessTokenExpires: Date.now() + 60 * 23 * 60 * 1000,
     };
   } catch (error) {
     console.error("Refresh token failed", axios.isAxiosError(error) ? error.response?.data : error);
@@ -93,7 +91,7 @@ export const authOptions: NextAuthOptions = {
         token.token = user.token;
         token.sessionToken = user.sessionToken;
         // optional: store expiry if backend gives it
-        token.accessTokenExpires = Date.now() + 15 * 60 * 1000;
+        token.accessTokenExpires = Date.now() + 24 * 60 * 60 * 1000;
       }
 
       // still valid token → return it

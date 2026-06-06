@@ -12,6 +12,11 @@ import React from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
+type FormSelectItem = {
+  text: string;
+  value: string | number | boolean;
+};
+
 type FormInputProps<T extends FieldValues> = {
   form: UseFormReturn<T>;
   name: Path<T>;
@@ -19,7 +24,7 @@ type FormInputProps<T extends FieldValues> = {
   label: string;
   formDescription?: string;
   className?: string;
-  items: { text: string; value: string }[];
+  items: FormSelectItem[];
 };
 
 const FormSelect = <T extends FieldValues>({
@@ -38,7 +43,13 @@ const FormSelect = <T extends FieldValues>({
       render={({ field }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
-          <Select value={field.value ?? ""} onValueChange={field.onChange}>
+          <Select
+            value={field.value === undefined || field.value === null ? "" : String(field.value)}
+            onValueChange={(value) => {
+              const matchedItem = items.find((item) => String(item.value) === value);
+              field.onChange(matchedItem?.value ?? value);
+            }}
+          >
             <FormControl
               className={cn(
                 "focus-visible:ring-0",
@@ -52,7 +63,7 @@ const FormSelect = <T extends FieldValues>({
             </FormControl>
             <SelectContent>
               {items.map((item, i) => (
-                <SelectItem key={i} value={item.value}>
+                <SelectItem key={`${String(item.value)}-${i}`} value={String(item.value)}>
                   {item.text}
                 </SelectItem>
               ))}
