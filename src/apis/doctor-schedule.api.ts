@@ -54,7 +54,7 @@ export const deleteDoctorSchedule = async (publicId: string, scheduleId: number,
 
 export const generateDoctorSlots = async (
   publicId: string,
-  scheduleId: string,
+  scheduleId: number,
   dates: string[],
   token: string,
 ) => {
@@ -67,21 +67,46 @@ export const generateDoctorSlots = async (
   return data;
 };
 
-export const getDoctorSlots = (publicId: string, date?: string, available?: boolean) => {
+export const getDoctorSlots = (
+  publicId: string,
+  date?: string,
+  available?: boolean,
+  page?: number,
+  limit?: number,
+) => {
   const query = new URLSearchParams();
 
   if (date) query.set("date", date);
   if (typeof available === "boolean") query.set("available", String(available));
+  if (page) query.set("page", String(page));
+  if (limit) query.set("limit", String(limit));
 
   return fetcher<SlotListResponse>(
     `/doctors-schedule/${publicId}/get/slots${query.toString() ? `?${query.toString()}` : ""}`,
   );
 };
 
-export const cancelDoctorSlot = async (publicId: string, slotId: string, token: string) => {
+export const cancelDoctorSlot = async (token: string, publicId: string, slotId: number) => {
   const { data } = await axiosInstance.patch(`/doctors-schedule/${publicId}/slots/${slotId}/cancel`, null, {
     headers: authHeaders(token),
   });
+
+  return data;
+};
+
+export const deleteFutureUnbookedSlots = async (token: string, publicId: string, scheduleId?: number) => {
+  const params = new URLSearchParams();
+
+  if (scheduleId) {
+    params.set("scheduleId", String(scheduleId));
+  }
+
+  const { data } = await axiosInstance.delete(
+    `/doctors-schedule/${publicId}/get/slots${params.toString() ? `?${params.toString()}` : ""}`,
+    {
+      headers: authHeaders(token),
+    },
+  );
 
   return data;
 };

@@ -1,9 +1,10 @@
-import { deleteDoctorSchedule } from "@/apis/doctor-schedule.api";
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { authOptions } from "@/helpers/authOptions";
+import { useDeleteDoctorSchedule } from "@/hooks/doctor/useDoctorSchedule";
 import type { DoctorSchedule } from "@/types/schedule.types";
-import { Edit, Trash2 } from "lucide-react";
-import { getServerSession } from "next-auth";
+import { Edit, Loader2, Trash2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "react-toastify";
 
@@ -15,17 +16,19 @@ type ScheduleListPanelProps = {
   setEdit: Dispatch<SetStateAction<boolean>>;
 };
 
-export const ScheduleListPanel = async ({
+export const ScheduleListPanel = ({
   schedules,
   isLoading = false,
   summary,
   setEdit,
   setUpdateData,
 }: ScheduleListPanelProps) => {
-  const data = await getServerSession(authOptions);
-  const authToken = data?.token;
+  const { data: session } = useSession();
 
-  const publicId = data?.user?.publicId;
+  const authToken = session?.token;
+  const publicId = session?.user?.publicId;
+
+  const deleteDoctorSchedule = useDeleteDoctorSchedule(authToken);
 
   const handleDeleteSchedule = async (scheduleId: number) => {
     if (!publicId || !authToken) {
@@ -33,9 +36,7 @@ export const ScheduleListPanel = async ({
       return;
     }
 
-    await deleteDoctorSchedule(publicId, scheduleId, authToken)
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
+    deleteDoctorSchedule.mutate({ publicId, scheduleId });
   };
 
   return (
@@ -77,7 +78,11 @@ export const ScheduleListPanel = async ({
                   <Edit />
                 </Button>
                 <Button size="icon" variant="destructive" onClick={() => handleDeleteSchedule(schedule.id)}>
-                  <Trash2 />
+                  {deleteDoctorSchedule.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
             </div>

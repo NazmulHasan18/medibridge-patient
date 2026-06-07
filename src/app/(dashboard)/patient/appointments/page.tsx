@@ -2,114 +2,163 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Plus, Stethoscope } from "lucide-react";
-// Edit2, Eye, Trash2
-// import { DataTable } from "@/components/ui/data-table";
-// import { useAdminDoctors } from "@/hooks/doctor/useAdminDoctors";
-// import { cn } from "@/lib/utils";
-// import { Doctor } from "@/types/doctor.types";
-// import { ColumnDef } from "@tanstack/react-table";
-// import { isAxiosError } from "axios";
-// import { useSession } from "next-auth/react";
-// import Image from "next/image";
-// import { useState } from "react";
+import { CalendarX, Eye, Plus, Stethoscope } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { useCancelAppointment, useMyAppointment } from "@/hooks/appointments/useAppointment";
+import { isAxiosError } from "axios";
+import { ColumnDef } from "@tanstack/react-table";
+import { Appointment } from "@/types/appointment.types";
+import { cn } from "@/lib/utils";
+import { DataTable } from "@/components/ui/data-table";
 
-// const PAGE_SIZE = 10;
+const PAGE_SIZE = 10;
 
-// const doctorColumns: ColumnDef<Doctor>[] = [
-//   {
-//     id: "doctor",
-//     header: "Doctor",
-//     cell: ({ row }) => {
-//       const doctor = row.original;
+export const appointmentColumns: ColumnDef<Appointment>[] = [
+  {
+    id: "patient",
+    header: "Patient",
+    cell: ({ row }) => (
+      <div>
+        <p className="font-medium">{row.original.patientName}</p>
+        <p className="text-xs text-muted-foreground">{row.original.relation}</p>
+      </div>
+    ),
+  },
+  {
+    id: "doctor",
+    header: "Doctor",
+    cell: ({ row }) => (
+      <div>
+        <p className="font-medium">{row.original.doctor.user.name}</p>
+        <p className="text-xs text-muted-foreground">{row.original.doctor.specialization}</p>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "consultationType",
+    header: "Consultation",
+  },
+  {
+    accessorKey: "appointmentDate",
+    header: "Appointment Date",
+    cell: ({ row }) =>
+      new Intl.DateTimeFormat("en", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }).format(new Date(row.original.appointmentDate)),
+  },
+  {
+    id: "slot",
+    header: "Time Slot",
+    cell: ({ row }) => {
+      const slot = row.original.doctorSlots;
 
-//       return (
-//         <div className="flex min-w-0 items-center gap-3">
-//           <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-md bg-muted">
-//             {doctor.user.profileImage ? (
-//               <Image
-//                 src={doctor.user.profileImage}
-//                 alt={doctor.user.name}
-//                 fill
-//                 sizes="44px"
-//                 className="object-cover"
-//               />
-//             ) : (
-//               <span className="flex h-full w-full items-center justify-center text-sm font-semibold text-muted-foreground">
-//                 {doctor.user.name.charAt(0)}
-//               </span>
-//             )}
-//           </div>
-//           <div className="min-w-0">
-//             <p className="truncate font-medium text-foreground">{doctor.user.name}</p>
-//             <p className="truncate text-xs text-muted-foreground">{doctor.user.email}</p>
-//           </div>
-//         </div>
-//       );
-//     },
-//   },
-//   {
-//     accessorKey: "specialization",
-//     header: "Specialization",
-//   },
-//   {
-//     accessorKey: "experience",
-//     header: "Experience",
-//     cell: ({ row }) => `${row.original.experience} yrs`,
-//   },
-//   {
-//     accessorKey: "consultationFee",
-//     header: "Fee",
-//     cell: ({ row }) => `৳${row.original.consultationFee}`,
-//   },
-//   {
-//     id: "phone",
-//     header: "Phone",
-//     cell: ({ row }) => row.original.user.phone,
-//   },
-//   {
-//     accessorKey: "createdAt",
-//     header: "Joined",
-//     cell: ({ row }) =>
-//       new Intl.DateTimeFormat("en", {
-//         day: "2-digit",
-//         month: "short",
-//         year: "numeric",
-//       }).format(new Date(row.original.createdAt)),
-//   },
-//   {
-//     accessorKey: "deletedAt",
-//     header: "Status",
-//     cell: ({ row }) => (
-//       <p
-//         className={cn(
-//           "rounded-sm p-2 border text-center",
-//           row.original.deletedAt ? "bg-red-400 dark:bg-red-800" : "bg-green-400 dark:bg-green-700",
-//         )}
-//       >
-//         {row.original.deletedAt ? "Deleted" : "Active"}
-//       </p>
-//     ),
-//   },
-// ];
+      if (!slot) return "-";
+
+      return `${new Date(slot.startTime).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })} - ${new Date(slot.endTime).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}`;
+    },
+  },
+  {
+    id: "fee",
+    header: "Fee",
+    cell: ({ row }) => `৳${row.original.doctor.consultationFee}`,
+  },
+  {
+    id: "payment",
+    header: "Payment",
+    cell: ({ row }) => {
+      const payment = row.original.payment;
+
+      return (
+        <span
+          className={cn(
+            "rounded-md px-2 py-1 text-xs font-medium",
+            payment?.paymentStatus === "SUCCESS"
+              ? "bg-green-100 text-green-700"
+              : payment?.paymentStatus === "FAILED"
+                ? "bg-red-100 text-red-700"
+                : "bg-yellow-100 text-yellow-700",
+          )}
+        >
+          {payment?.paymentStatus ?? "N/A"}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "appointmentStatus",
+    header: "Status",
+    cell: ({ row }) => (
+      <span
+        className={cn(
+          "rounded-md px-2 py-1 text-xs font-medium",
+          row.original.appointmentStatus === "CONFIRMED"
+            ? "bg-green-100 text-green-700"
+            : row.original.appointmentStatus === "PENDING"
+              ? "bg-yellow-100 text-yellow-700"
+              : row.original.appointmentStatus === "CANCELLED"
+                ? "bg-red-100 text-red-700"
+                : "bg-blue-100 text-blue-700",
+        )}
+      >
+        {row.original.appointmentStatus}
+      </span>
+    ),
+  },
+  {
+    id: "meeting",
+    header: "Meeting",
+    cell: ({ row }) =>
+      row.original.meeting ? (
+        <Link
+          href={row.original.meeting.meetingLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline"
+        >
+          <Button variant="outline" size="sm">
+            Join
+          </Button>
+        </Link>
+      ) : (
+        "-"
+      ),
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Booked On",
+    cell: ({ row }) =>
+      new Intl.DateTimeFormat("en", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }).format(new Date(row.original.createdAt)),
+  },
+];
 
 export default function PatientAppointmentPage() {
-  // const [page, setPage] = useState(1);
-  // const { data: session, status } = useSession();
-  // const { data, isError, isLoading, error } = useAdminDoctors(session?.token, {
-  //   page,
-  //   limit: PAGE_SIZE,
-  // });
+  const [page, setPage] = useState(1);
+  const { data: session, status } = useSession();
+  const { data, isError, isLoading, error } = useMyAppointment(session?.token, { page, limit: PAGE_SIZE });
+  const cancelAppointment = useCancelAppointment(session?.token);
 
-  // const doctors = data?.data.data ?? [];
-  // const meta = data?.data.meta;
-
-  // const errorMessage =
-  //   isAxiosError<{ message?: string }>(error) && error.response?.data?.message
-  //     ? error.response.data.message
-  //     : isError
-  //       ? "Failed to fetch doctors."
-  //       : undefined;
+  const appointments = data?.data ?? [];
+  const meta = data?.meta;
+  console.log("Appointment Data =====================>", appointments, meta);
+  const errorMessage =
+    isAxiosError<{ message?: string }>(error) && error.response?.data?.message
+      ? error.response.data.message
+      : isError
+        ? "Failed to fetch Appointments."
+        : undefined;
 
   return (
     <div className="space-y-6">
@@ -134,26 +183,29 @@ export default function PatientAppointmentPage() {
         </div>
       </section>
 
-      {/* <DataTable
-        columns={doctorColumns}
-        data={doctors}
+      <DataTable
+        columns={appointmentColumns}
+        data={appointments}
         isLoading={status === "loading" || isLoading}
         errorMessage={errorMessage}
         emptyMessage="No doctors found."
-        actions={(doctor) => (
+        actions={(appointment) => (
           <>
-            <Button asChild variant="outline" size="icon" aria-label="View doctor">
-              <Link href={`/admin/doctors/${doctor.publicId}`}>
+            <Button asChild variant="outline" size="icon" aria-label="View Appointment">
+              <Link href={`/admin/doctors/${appointment.publicId}`}>
                 <Eye className="h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="icon" aria-label="Edit doctor">
-              <Link href={`/admin/doctors/${doctor.publicId}`}>
-                <Edit2 className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button variant="outline" size="icon" aria-label="Delete doctor">
-              <Trash2 className="h-4 w-4" />
+            <Button
+              asChild
+              variant="outline"
+              size="icon"
+              className="px-2"
+              aria-label="Cancel Appointment"
+              disabled={cancelAppointment.isPending}
+              onClick={() => cancelAppointment.mutate({ id: appointment.publicId })}
+            >
+              <CalendarX className="h-4 w-4" />
             </Button>
           </>
         )}
@@ -168,7 +220,7 @@ export default function PatientAppointmentPage() {
               }
             : undefined
         }
-      /> */}
+      />
     </div>
   );
 }

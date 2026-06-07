@@ -21,6 +21,9 @@ import { UpdateSchedulePanel } from "@/components/Dashboard/doctors/UpdateSchedu
 
 export default function DoctorSchedulePage() {
   const [edit, setEdit] = useState(false);
+  const [date, setDate] = useState<string | undefined>();
+  const [page, setPage] = useState(1);
+
   const [updateData, setUpdateData] = useState<DoctorSchedule>();
   const { data: session } = useSession();
   const publicId = session?.user?.publicId;
@@ -29,7 +32,9 @@ export default function DoctorSchedulePage() {
   const [dates, setDates] = useState("2026-06-08,2026-06-09");
 
   const { data: schedulesData, isLoading: schedulesLoading } = useDoctorSchedules(publicId);
-  const { data: slotsData, isLoading: slotsLoading } = useDoctorSlots(publicId, "2026-06-08", true);
+  const { data: slotsRes, isLoading: slotsLoading } = useDoctorSlots({ publicId, date, page, limit: 10 });
+  const slotsData = slotsRes?.data;
+  const meta = slotsRes?.data?.meta;
   const createSchedule = useCreateDoctorSchedule(authToken);
   const updateSchedule = useUpdateDoctorSchedule(authToken);
   const generateSlots = useGenerateDoctorSlots(authToken);
@@ -93,7 +98,7 @@ export default function DoctorSchedulePage() {
     setUpdateData(undefined);
   };
 
-  const handleGenerateSlots = async () => {
+  const handleGenerateSlots = async (scheduleId: number) => {
     if (!publicId || !authToken || !schedules[0]) return;
 
     const selectedDates = dates
@@ -101,7 +106,7 @@ export default function DoctorSchedulePage() {
       .map((date) => date.trim())
       .filter(Boolean);
 
-    generateSlots.mutate({ publicId, scheduleId: String(schedules[0].id), dates: selectedDates });
+    generateSlots.mutate({ publicId, scheduleId, dates: selectedDates });
   };
 
   return (
@@ -123,6 +128,7 @@ export default function DoctorSchedulePage() {
           onDatesChange={setDates}
           onGenerate={handleGenerateSlots}
           isGenerating={generateSlots.isPending}
+          schedules={schedules}
         />
       </div>
 
@@ -133,7 +139,14 @@ export default function DoctorSchedulePage() {
         setEdit={setEdit}
         setUpdateData={setUpdateData}
       />
-      <UpcomingSlotsPanel slots={slots} isLoading={slotsLoading} />
+      <UpcomingSlotsPanel
+        setDate={setDate}
+        slots={slots}
+        isLoading={slotsLoading}
+        publicId={publicId as string}
+        meta={meta}
+        setPage={setPage}
+      />
     </div>
   );
 }

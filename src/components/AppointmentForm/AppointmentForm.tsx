@@ -98,9 +98,15 @@ const AppointmentForm = () => {
     data: slotsData,
     isLoading: isSlotsLoading,
     isError: isSlotsError,
-  } = useDoctorSlots(selectedDoctor?.user?.publicId, selectedAppointmentDate || undefined, true);
+  } = useDoctorSlots({
+    publicId: selectedDoctor?.user?.publicId,
+    date: selectedAppointmentDate || undefined,
+    available: true,
+    page: 1,
+    limit: 100,
+  });
 
-  const availableSlots = slotsData?.data ?? [];
+  const availableSlots = slotsData?.data.data ?? [];
   const slotOptions = availableSlots
     .filter((slot) => !slot.isBooked)
     .map((slot) => ({
@@ -298,7 +304,9 @@ const AppointmentForm = () => {
           className="mx-auto w-fit md:col-span-2"
           disabled={isLoadingDoctors || isSlotsLoading}
         >
-          {isLoadingDoctors || isSlotsLoading ? "Loading..." : "Submit Appointment"}
+          {isLoadingDoctors || isSlotsLoading || createAppointment.isPending
+            ? "Loading..."
+            : "Submit Appointment"}
         </Button>
       </form>
     </Form>

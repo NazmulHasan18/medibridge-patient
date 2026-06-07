@@ -1,3 +1,5 @@
+import { PaginationMeta } from "./doctor.types";
+
 export const DAY_OF_WEEK_OPTIONS = [
   "MONDAY",
   "TUESDAY",
@@ -32,6 +34,7 @@ export type DoctorSlot = {
   startTime: string;
   endTime: string;
   isBooked: boolean;
+  isCancelled: boolean;
   status?: string;
   schedule?: DoctorSchedule;
 };
@@ -51,7 +54,7 @@ export type ScheduleDetailResponse = {
 export type SlotListResponse = {
   success: boolean;
   message: string;
-  data: DoctorSlot[];
+  data: { data: DoctorSlot[]; meta?: PaginationMeta };
 };
 
 export type GenerateSlotsResponse = {

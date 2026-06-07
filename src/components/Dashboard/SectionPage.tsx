@@ -4,7 +4,7 @@ type SectionPageProps = {
   title: string;
   description: string;
   icon: LucideIcon;
-  items: {
+  items?: {
     title: string;
     meta: string;
     status: string;
@@ -26,25 +26,27 @@ const SectionPage = ({ title, description, icon: Icon, items }: SectionPageProps
         </div>
       </section>
 
-      <section className="rounded-lg border border-border bg-card shadow-sm">
-        <div className="grid grid-cols-[minmax(0,1fr)_120px] gap-4 border-b border-border px-5 py-3 text-sm font-medium text-muted-foreground">
-          <span>Details</span>
-          <span>Status</span>
-        </div>
-        <div className="divide-y divide-border">
-          {items.map((item) => (
-            <article key={item.title} className="grid grid-cols-[minmax(0,1fr)_120px] gap-4 px-5 py-4">
-              <div className="min-w-0">
-                <p className="truncate font-medium">{item.title}</p>
-                <p className="truncate text-sm text-muted-foreground">{item.meta}</p>
-              </div>
-              <span className="h-fit w-fit rounded-md bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                {item.status}
-              </span>
-            </article>
-          ))}
-        </div>
-      </section>
+      {items?.length && (
+        <section className="rounded-lg border border-border bg-card shadow-sm">
+          <div className="grid grid-cols-[minmax(0,1fr)_120px] gap-4 border-b border-border px-5 py-3 text-sm font-medium text-muted-foreground">
+            <span>Details</span>
+            <span>Status</span>
+          </div>
+          <div className="divide-y divide-border">
+            {items?.map((item) => (
+              <article key={item.title} className="grid grid-cols-[minmax(0,1fr)_120px] gap-4 px-5 py-4">
+                <div className="min-w-0">
+                  <p className="truncate font-medium">{item.title}</p>
+                  <p className="truncate text-sm text-muted-foreground">{item.meta}</p>
+                </div>
+                <span className="h-fit w-fit rounded-md bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                  {item.status}
+                </span>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 };

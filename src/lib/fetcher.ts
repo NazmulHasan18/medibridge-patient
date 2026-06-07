@@ -1,14 +1,19 @@
-// lib/api/fetcher.ts
+import { ApiError } from "@/helpers/ApiError";
+
 export const fetcher = async <T>(url: string, options?: RequestInit): Promise<T> => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(options?.headers || {}),
+    },
     ...options,
   });
 
+  const data = await res.json().catch(() => ({}));
+
   if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
-    throw new Error(error.message || `Request failed with status ${res.status}`);
+    throw new ApiError(data.message || "Request failed", res.status, data);
   }
 
-  return res.json();
+  return data;
 };
