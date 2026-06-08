@@ -1,18 +1,8 @@
 // app/doctor/appointments/[publicId]/page.tsx
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  Video,
-  CreditCard,
-  ClipboardCheck,
-  CalendarClock,
-  CalendarX,
-  StickyNote,
-  ExternalLink,
-} from "lucide-react";
+import { ArrowLeft, Video, CreditCard, ClipboardCheck, StickyNote, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { getAppointmentByPublicId } from "@/apis/appointment.api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/helpers/authOptions";
@@ -60,7 +50,6 @@ export default async function AppointmentDetailPage({ params }: Props) {
       >
         <ArrowLeft className="h-4 w-4" /> Back to appointments
       </Link>
-
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -90,7 +79,6 @@ export default async function AppointmentDetailPage({ params }: Props) {
           </span>
         </div>
       </div>
-
       {/* Metrics */}
       <div className="grid grid-cols-3 gap-4">
         {[
@@ -121,7 +109,6 @@ export default async function AppointmentDetailPage({ params }: Props) {
           </div>
         ))}
       </div>
-
       {/* Patient + Doctor */}
       <div className="grid grid-cols-2 gap-4">
         <DetailCard title="Patient" icon={<ClipboardCheck className="h-3.5 w-3.5" />}>
@@ -153,7 +140,6 @@ export default async function AppointmentDetailPage({ params }: Props) {
           <InfoRow label="Email" value={doctor.user.email} highlight />
         </DetailCard>
       </div>
-
       {/* Payment + Meeting */}
       <div className="grid grid-cols-2 gap-4">
         <DetailCard title="Payment" icon={<CreditCard className="h-3.5 w-3.5" />}>
@@ -201,15 +187,13 @@ export default async function AppointmentDetailPage({ params }: Props) {
           )}
         </DetailCard>
       </div>
-
       {/* Notes */}
       {appointment.notes && (
         <DetailCard title="Notes" icon={<StickyNote className="h-3.5 w-3.5" />}>
           <p className="rounded-md bg-muted/50 p-3 text-sm text-muted-foreground">{appointment.notes}</p>
         </DetailCard>
       )}
-
-      {/* Actions */}
+      {/* Actions
       <DetailCard title="Actions" icon={<ClipboardCheck className="h-3.5 w-3.5" />}>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm">
@@ -227,7 +211,7 @@ export default async function AppointmentDetailPage({ params }: Props) {
             <CalendarX className="mr-1.5 h-4 w-4" /> Cancel appointment
           </Button>
         </div>
-      </DetailCard>
+      </DetailCard> */}
     </div>
   );
 }

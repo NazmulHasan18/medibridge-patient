@@ -108,3 +108,6 @@ export type MyAppointmentParams = {
   page?: number;
   limit?: number;
 };
+
+export const STATUSES = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED", "PAID", "REFUNDED"] as const;
+export type AppointmentStatus = (typeof STATUSES)[number];

@@ -1,8 +1,5 @@
-import axiosInstance from "@/lib/axios";
-import { Appointment } from "@/types/appointment.types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Appointment, AppointmentStatus, STATUSES } from "@/types/appointment.types";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import {
   Dialog,
   DialogContent,
@@ -14,10 +11,10 @@ import {
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Button } from "../ui/button";
+import { useUpdateAppointmentStatus } from "@/hooks/appointments/useAppointment";
+import { useSession } from "next-auth/react";
 
 // components/appointments/UpdateStatusDialog.tsx
-const STATUSES = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"] as const;
-type AppointmentStatus = (typeof STATUSES)[number];
 
 interface Props {
   appointment: Appointment | null;
@@ -28,19 +25,11 @@ interface Props {
 export function UpdateStatusDialog({ appointment, open, onClose }: Props) {
   const [status, setStatus] = useState<AppointmentStatus | "">("");
 
-  const queryClient = useQueryClient();
-  const updateStatus = useMutation({
-    mutationFn: (data: { id: string; status: AppointmentStatus }) =>
-      axiosInstance.patch(`/appointments/${data.id}/status`, {
-        appointmentStatus: data.status,
-      }),
-    onSuccess: () => {
-      toast.success("Appointment status updated");
-      queryClient.invalidateQueries({ queryKey: ["appointment"] });
-      onClose();
-    },
-    onError: () => toast.error("Failed to update status"),
-  });
+  const { data } = useSession();
+
+  const token = (data?.token || data?.user.token) as string;
+
+  const updateStatus = useUpdateAppointmentStatus(token);
 
   // Reset on open
   useEffect(() => {
@@ -49,7 +38,14 @@ export function UpdateStatusDialog({ appointment, open, onClose }: Props) {
 
   const handleSubmit = () => {
     if (!appointment || !status) return;
-    updateStatus.mutate({ id: appointment.publicId, status });
+    updateStatus.mutate(
+      { id: appointment.publicId, status },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      },
+    );
   };
 
   return (

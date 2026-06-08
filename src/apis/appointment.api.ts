@@ -1,6 +1,7 @@
 import axiosInstance from "@/lib/axios";
 import { fetcher } from "@/lib/fetcher";
 import {
+  AppointmentStatus,
   CreateAppointmentPayload,
   GetAppointmentByPublicIdResponse,
   GetAppointmentsResponse,
@@ -56,3 +57,29 @@ export const cancelMyAppointment = async (id: string, token: string) => {
 
   return data;
 };
+
+export const updateAppointmentStatus = (token: string, data: { id: string; status: AppointmentStatus }) =>
+  axiosInstance.patch(
+    `/appointment/${data.id}/status`,
+    {
+      appointmentStatus: data.status,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+export const rescheduleAppointment = (data: { id: string; slotId: number; date: string }, token?: string) =>
+  axiosInstance.patch(
+    `/appointment/${data.id}/reschedule`,
+    {
+      newSlotId: data.slotId,
+      newAppointmentDate: new Date(data.date),
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );

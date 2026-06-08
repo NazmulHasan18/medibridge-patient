@@ -17,6 +17,11 @@ import { RescheduleDialog } from "@/components/Appointments/RescheduleDialog";
 // appointmentColumns for Doctor view
 const appointmentColumns: ColumnDef<Appointment>[] = [
   {
+    id: "sl",
+    header: "SL",
+    cell: ({ row }) => row.index + 1,
+  },
+  {
     id: "patient",
     header: "Patient",
     cell: ({ row }) => {
@@ -165,7 +170,7 @@ export default function DoctorAppointmentsPage() {
 
   const appointments = data?.data ?? [];
   const meta = data?.meta;
-  console.log("Appointment Data =====================>", appointments, meta);
+
   const errorMessage =
     isAxiosError<{ message?: string }>(error) && error.response?.data?.message
       ? error.response.data.message

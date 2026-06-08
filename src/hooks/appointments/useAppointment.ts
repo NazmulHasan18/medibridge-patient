@@ -1,5 +1,11 @@
-import { cancelMyAppointment, createAppointment, getMyAppointment } from "@/apis/appointment.api";
-import { CreateAppointmentPayload, MyAppointmentParams } from "@/types/appointment.types";
+import {
+  cancelMyAppointment,
+  createAppointment,
+  getMyAppointment,
+  rescheduleAppointment,
+  updateAppointmentStatus,
+} from "@/apis/appointment.api";
+import { AppointmentStatus, CreateAppointmentPayload, MyAppointmentParams } from "@/types/appointment.types";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -50,5 +56,30 @@ export const useCancelAppointment = (token?: string) => {
       console.log(err);
       toast.error(err.message);
     },
+  });
+};
+
+export const useUpdateAppointmentStatus = (token: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { id: string; status: AppointmentStatus }) => updateAppointmentStatus(token, data),
+    onSuccess: () => {
+      toast.success("Appointment status updated");
+      queryClient.invalidateQueries({ queryKey: ["appointment"] });
+    },
+    onError: () => toast.error("Failed to update status"),
+  });
+};
+
+export const useRescheduleAppointment = (token?: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { id: string; slotId: number; date: string }) => rescheduleAppointment(data, token),
+    onSuccess: () => {
+      toast.success("Appointment rescheduled");
+      queryClient.invalidateQueries({ queryKey: ["appointment"] });
+    },
+    onError: () => toast.error("Failed to reschedule"),
   });
 };

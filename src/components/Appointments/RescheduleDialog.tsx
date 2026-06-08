@@ -1,8 +1,5 @@
-import axiosInstance from "@/lib/axios";
-import { Appointment, DoctorSlot } from "@/types/appointment.types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Appointment } from "@/types/appointment.types";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +12,9 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
+import { useDoctorSlots } from "@/hooks/doctor/useDoctorSchedule";
+import { useRescheduleAppointment } from "@/hooks/appointments/useAppointment";
+import { useSession } from "next-auth/react";
 
 // components/appointments/RescheduleDialog.tsx
 interface Props {
@@ -29,32 +29,20 @@ export function RescheduleDialog({ appointment, open, onClose }: Props) {
   // Fetch available slots for the doctor on a new date
   const [targetDate, setTargetDate] = useState<string>("");
 
-  const { data: slots, isLoading: slotsLoading } = useQuery({
-    queryKey: ["doctor-slots", appointment?.doctorId, targetDate],
-    queryFn: () =>
-      axiosInstance
-        .get(`/doctors/${appointment!.doctor.publicId}/slots`, {
-          params: { date: targetDate },
-        })
-        .then((r) => r.data.data),
-    enabled: !!appointment && !!targetDate,
+  const { data } = useSession();
+  const token = data?.token || data?.user.token;
+
+  const { data: slotRes, isLoading: slotsLoading } = useDoctorSlots({
+    publicId: data?.user.publicId,
+    date: targetDate,
+    available: true,
+    page: 1,
+    limit: 50,
   });
 
-  const queryClient = useQueryClient();
+  const slots = slotRes?.data.data;
 
-  const reschedule = useMutation({
-    mutationFn: (data: { id: string; slotId: number; date: string }) =>
-      axiosInstance.patch(`/appointments/${data.id}/reschedule`, {
-        slotId: data.slotId,
-        appointmentDate: data.date,
-      }),
-    onSuccess: () => {
-      toast.success("Appointment rescheduled");
-      queryClient.invalidateQueries({ queryKey: ["appointment"] });
-      onClose();
-    },
-    onError: () => toast.error("Failed to reschedule"),
-  });
+  const reschedule = useRescheduleAppointment(token);
 
   // Reset on open
   useEffect(() => {
@@ -66,11 +54,18 @@ export function RescheduleDialog({ appointment, open, onClose }: Props) {
 
   const handleSubmit = () => {
     if (!appointment || !selectedSlotId || !targetDate) return;
-    reschedule.mutate({
-      id: appointment.publicId,
-      slotId: selectedSlotId,
-      date: targetDate,
-    });
+    reschedule.mutate(
+      {
+        id: appointment.publicId,
+        slotId: selectedSlotId,
+        date: targetDate,
+      },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      },
+    );
   };
 
   return (
@@ -106,7 +101,7 @@ export function RescheduleDialog({ appointment, open, onClose }: Props) {
                 <p className="text-sm text-muted-foreground">No available slots for this date.</p>
               ) : (
                 <div className="grid grid-cols-3 gap-2">
-                  {slots.map((slot: DoctorSlot) => (
+                  {slots?.map((slot) => (
                     <button
                       key={slot.id}
                       type="button"
