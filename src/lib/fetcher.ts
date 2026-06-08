@@ -9,7 +9,7 @@ export const fetcher = async <T>(url: string, options?: RequestInit): Promise<T>
     ...options,
   });
 
-  const data = await res.json().catch(() => ({}));
+  const data = await res.json().catch((err) => console.log(err));
 
   if (!res.ok) {
     throw new ApiError(data.message || "Request failed", res.status, data);

@@ -14,7 +14,7 @@ import { DataTable } from "@/components/ui/data-table";
 
 const PAGE_SIZE = 10;
 
-export const appointmentColumns: ColumnDef<Appointment>[] = [
+const appointmentColumns: ColumnDef<Appointment>[] = [
   {
     id: "patient",
     header: "Patient",
@@ -152,7 +152,6 @@ export default function PatientAppointmentPage() {
 
   const appointments = data?.data ?? [];
   const meta = data?.meta;
-  console.log("Appointment Data =====================>", appointments, meta);
   const errorMessage =
     isAxiosError<{ message?: string }>(error) && error.response?.data?.message
       ? error.response.data.message

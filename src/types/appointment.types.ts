@@ -15,6 +15,11 @@ export interface GetAppointmentsResponse {
   data: Appointment[];
   meta: Meta;
 }
+export interface GetAppointmentByPublicIdResponse {
+  success: boolean;
+  message: string;
+  data: Appointment;
+}
 
 export interface Appointment {
   id: number;

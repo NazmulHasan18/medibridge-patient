@@ -2,6 +2,7 @@ import axiosInstance from "@/lib/axios";
 import { fetcher } from "@/lib/fetcher";
 import {
   CreateAppointmentPayload,
+  GetAppointmentByPublicIdResponse,
   GetAppointmentsResponse,
   MyAppointmentParams,
 } from "@/types/appointment.types";
@@ -28,7 +29,18 @@ export const getMyAppointment = (
       .map(([k, v]) => [k, String(v)]),
   ).toString();
 
-  return fetcher<GetAppointmentsResponse>(`/appointment/my-appointments?${query}`, {
+  return fetcher<GetAppointmentsResponse>(`/appointment/appointments?${query}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getAppointmentByPublicId = (
+  token: string,
+  publicId: string,
+): Promise<GetAppointmentByPublicIdResponse> => {
+  return fetcher<GetAppointmentByPublicIdResponse>(`/appointment/${publicId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
