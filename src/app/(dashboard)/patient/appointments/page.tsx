@@ -16,6 +16,11 @@ const PAGE_SIZE = 10;
 
 const appointmentColumns: ColumnDef<Appointment>[] = [
   {
+    id: "sl",
+    header: "SL",
+    cell: ({ row }) => row.index + 1,
+  },
+  {
     id: "patient",
     header: "Patient",
     cell: ({ row }) => (
@@ -191,7 +196,7 @@ export default function PatientAppointmentPage() {
         actions={(appointment) => (
           <>
             <Button asChild variant="outline" size="icon" aria-label="View Appointment">
-              <Link href={`/admin/doctors/${appointment.publicId}`}>
+              <Link href={`/patient/appointments/${appointment.publicId}`}>
                 <Eye className="h-4 w-4" />
               </Link>
             </Button>
