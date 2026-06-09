@@ -129,4 +129,14 @@ export const DOSAGE_PRESETS = [
   "Apply locally",
 ] as const;
 
+export interface PrescriptionListResponse {
+  prescriptions: Prescription[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 export type Dosage = (typeof DOSAGE_PRESETS)[number];

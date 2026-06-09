@@ -255,6 +255,8 @@ function PrescriptionDocument({ prescription }: { prescription: Prescription }) 
     "dd MMM yyyy, hh:mm a",
   );
 
+  console.log(prescription);
+
   return (
     <Document
       title={`Prescription - ${patient.user.name} - ${prescriptionDate}`}
@@ -300,7 +302,7 @@ function PrescriptionDocument({ prescription }: { prescription: Prescription }) 
             {appointment.gender && <Text style={styles.infoSub}>Gender: {appointment.gender}</Text>}
             {appointment.dateOfBirth && (
               <Text style={styles.infoSub}>
-                DOB: {moment(new Date(appointment.dateOfBirth)).format("dd MMM yyyy")}
+                DOB: {moment(new Date(appointment.dateOfBirth)).format("ddd MMM yyyy")}
               </Text>
             )}
             {/* {patient.bloodGroup && <Text style={styles.infoSub}>Blood Group: {patient.bloodGroup}</Text>} */}

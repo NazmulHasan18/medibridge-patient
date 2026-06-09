@@ -215,7 +215,7 @@ function RichEditor({
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Placeholder.configure({ placeholder, emptyEditorClass: "is-empty" }),
       BubbleMenu.configure({
-        element: document.querySelector("#bubble-menu"),
+        element: document.querySelector("#bubble-menu") as HTMLElement | null,
       }),
     ],
     content: initialContent || "",

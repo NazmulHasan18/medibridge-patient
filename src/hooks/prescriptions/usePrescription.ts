@@ -3,6 +3,7 @@ import axiosInstance from "@/lib/axios"; // your configured axios instance
 import {
   CreatePrescriptionPayload,
   Prescription,
+  PrescriptionListResponse,
   UpdatePrescriptionPayload,
 } from "@/types/prescriptions.types";
 import { AxiosError } from "axios";
@@ -11,12 +12,26 @@ import { AxiosError } from "axios";
 
 export const prescriptionKeys = {
   all: ["prescriptions"] as const,
-  mine: () => [...prescriptionKeys.all, "my"] as const,
-  byAppointment: (appointmentId: number) => [...prescriptionKeys.all, "appointment", appointmentId] as const,
-  byId: (publicId: string) => [...prescriptionKeys.all, publicId] as const,
+  mine: (page?: number) => ["prescriptions", "my", page] as const,
+  byAppointment: (appointmentId: number) => ["prescriptions", "appointment", appointmentId] as const,
+  byId: (publicId: string) => ["prescriptions", publicId] as const,
 };
 
 // ─── Fetchers ─────────────────────────────────────────────────────────────────
+
+const fetchMyPrescriptions = async (
+  page: number,
+  limit = 10,
+  token?: string,
+): Promise<PrescriptionListResponse> => {
+  const { data } = await axiosInstance.get("/prescriptions/my", {
+    params: { page, limit },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return { prescriptions: data.data, meta: data.meta };
+};
 
 const fetchPrescriptionByAppointment = async (
   appointmentId: number,
@@ -61,6 +76,15 @@ const updatePrescription = async ({
 };
 
 // ─── Hooks ────────────────────────────────────────────────────────────────────
+
+export function useMyPrescriptions(page = 1, limit = 10, token?: string) {
+  return useQuery({
+    queryKey: prescriptionKeys.mine(page),
+    queryFn: () => fetchMyPrescriptions(page, limit, token),
+    placeholderData: (prev) => prev, // smooth page transitions — your standard pattern
+    staleTime: 1000 * 60 * 2,
+  });
+}
 
 export function usePrescriptionByAppointment(appointmentId: number, enabled = true, token?: string) {
   return useQuery({
