@@ -17,7 +17,7 @@ type ErrorProps = {
 
 export default function ErrorPage({ error, reset }: ErrorProps) {
   useEffect(() => {
-    console.error(error);
+    console.error(error?.data);
   }, [error]);
 
   const status = error.status || 500;

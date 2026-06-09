@@ -1,5 +1,5 @@
 "use client";
-import { CalendarClock, ClipboardCheck, ClipboardList, Eye } from "lucide-react";
+import { CalendarClock, ClipboardCheck, ClipboardList, Eye, FilePenLine } from "lucide-react";
 import SectionPage from "@/components/Dashboard/SectionPage";
 import { DataTable } from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -145,6 +145,18 @@ const appointmentColumns: ColumnDef<Appointment>[] = [
       ),
   },
   {
+    id: "prescription",
+    header: "Write Prescription",
+    cell: ({ row }) => (
+      <Button asChild variant="outline" size="sm" aria-label="View Appointment">
+        <Link href={`/doctor/appointments/${row.original.publicId}/prescription`}>
+          <FilePenLine className="h-4 w-4" />
+          Write Prescription
+        </Link>
+      </Button>
+    ),
+  },
+  {
     accessorKey: "notes",
     header: "Notes",
     cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.notes || "—"}</span>,
@@ -191,6 +203,7 @@ export default function DoctorAppointmentsPage() {
           data={appointments}
           isLoading={status === "loading" || isLoading}
           errorMessage={errorMessage}
+          className="overflow-x-scroll"
           emptyMessage="No doctors found."
           actions={(appointment) => (
             <>

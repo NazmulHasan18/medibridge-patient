@@ -1,6 +1,7 @@
 import {
   cancelMyAppointment,
   createAppointment,
+  getAppointmentByPublicId,
   getMyAppointment,
   rescheduleAppointment,
   updateAppointmentStatus,
@@ -81,5 +82,13 @@ export const useRescheduleAppointment = (token?: string) => {
       queryClient.invalidateQueries({ queryKey: ["appointment"] });
     },
     onError: () => toast.error("Failed to reschedule"),
+  });
+};
+
+export const useGetAppointmentById = (publicId: string, token?: string) => {
+  return useQuery({
+    queryKey: ["appointment", publicId],
+    queryFn: () => getAppointmentByPublicId(publicId, token),
+    enabled: Boolean(token) && Boolean(publicId),
   });
 };

@@ -21,6 +21,19 @@ export interface GetAppointmentByPublicIdResponse {
   data: Appointment;
 }
 
+export interface Patient {
+  id: number;
+  publicId: string;
+  userId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
+  user: {
+    name: string;
+    email: string;
+  };
+}
+
 export interface Appointment {
   id: number;
   publicId: string;
@@ -37,7 +50,7 @@ export interface Appointment {
   notes: string;
   createdAt: string;
   updatedAt: string;
-
+  patient: Patient;
   doctor: Doctor;
   payment: Payment | null;
   meeting: Meeting | null;

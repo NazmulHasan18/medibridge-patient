@@ -18,7 +18,7 @@ export default async function AppointmentDetailPageAdmin({ params }: Props) {
 
   const { publicId } = await params;
 
-  const response = await getAppointmentByPublicId(session?.token as string, publicId);
+  const response = await getAppointmentByPublicId(publicId, session?.token);
   const appointment = response.data;
   if (!appointment) notFound();
 

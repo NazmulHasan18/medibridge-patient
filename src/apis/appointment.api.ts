@@ -38,8 +38,8 @@ export const getMyAppointment = (
 };
 
 export const getAppointmentByPublicId = (
-  token: string,
   publicId: string,
+  token?: string,
 ): Promise<GetAppointmentByPublicIdResponse> => {
   return fetcher<GetAppointmentByPublicIdResponse>(`/appointment/${publicId}`, {
     headers: {
