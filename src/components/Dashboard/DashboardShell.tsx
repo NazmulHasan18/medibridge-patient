@@ -20,6 +20,7 @@ import {
   Users,
   ShieldCheck,
   HomeIcon,
+  NotebookPen,
 } from "lucide-react";
 import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
@@ -53,6 +54,7 @@ const navByRole = {
     { label: "Appointments", href: "/doctor/appointments", icon: ClipboardList },
     { label: "Patients", href: "/doctor/patients", icon: Users },
     { label: "Prescriptions", href: "/doctor/prescriptions", icon: Pill },
+    { label: "Blogs", href: "/doctor/blogs", icon: NotebookPen },
     { label: "Profile", href: "/doctor/profile", icon: UserCog },
   ],
   patient: [
