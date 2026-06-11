@@ -15,6 +15,9 @@ interface PaginationConfig {
 }
 
 interface DataTableProps<TData> {
+  title?: string;
+  headerAction?: React.ReactNode;
+  description?: string;
   columns: ColumnDef<TData, unknown>[];
   data: TData[];
   isLoading?: boolean;
@@ -26,6 +29,9 @@ interface DataTableProps<TData> {
 }
 
 export function DataTable<TData>({
+  title,
+  description,
+  headerAction,
   columns,
   data,
   isLoading = false,
@@ -57,6 +63,18 @@ export function DataTable<TData>({
   return (
     <div className="space-y-4">
       <div className="rounded-md border border-border bg-card shadow-sm">
+        {title && (
+          <div className="flex items-center justify-between border-b bg-muted/30 px-6 py-4">
+            <div>
+              <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
+
+              {description && <p className="text-sm text-muted-foreground">{description}</p>}
+            </div>
+
+            {headerAction}
+          </div>
+        )}
+
         <Table className={className}>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
