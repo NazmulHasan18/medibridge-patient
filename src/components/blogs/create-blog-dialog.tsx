@@ -7,17 +7,39 @@ import { BlogForm, BlogFormValues } from "./blog-form";
 import { useState } from "react";
 import { useCreateBlog } from "@/hooks/blog/useBlog";
 import { useSession } from "next-auth/react";
+import { uploadImageToCloudinary } from "@/helpers/fileUploader";
 
 export function CreateBlogDialog() {
   const [open, setOpen] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const { data: session } = useSession();
   const token = session?.token || session?.user.token;
-  const { mutate: createBlog, isPending } = useCreateBlog(token);
+  const { mutate: createBlog } = useCreateBlog(token);
 
-  const handleSubmit = (values: BlogFormValues) => {
-    createBlog(values, {
-      onSuccess: () => setOpen(false),
-    });
+  const handleSubmit = async (values: BlogFormValues) => {
+    try {
+      let thumbnailUrl = "";
+      setIsPending(true);
+      if (values.thumbnail) {
+        thumbnailUrl = await uploadImageToCloudinary(values.thumbnail);
+      }
+      console.log(thumbnailUrl);
+
+      createBlog(
+        {
+          title: values.title,
+          content: values.content,
+          thumbnail: thumbnailUrl,
+        },
+        {
+          onSuccess: () => setOpen(false),
+        },
+      );
+      setIsPending(false);
+    } catch (error) {
+      console.log(error);
+      setIsPending(false);
+    }
   };
 
   return (

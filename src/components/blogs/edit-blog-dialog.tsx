@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { BlogForm, BlogFormValues } from "./blog-form";
 import { Blog } from "@/types/blog.types";
 import { useUpdateBlog } from "@/hooks/blog/useBlog";
+import { useSession } from "next-auth/react";
 
 interface EditBlogDialogProps {
   blog: Blog;
@@ -12,7 +13,10 @@ interface EditBlogDialogProps {
 }
 
 export function EditBlogDialog({ blog, open, onOpenChange }: EditBlogDialogProps) {
-  const { mutate: updateBlog, isPending } = useUpdateBlog();
+  const { data: session } = useSession();
+  const token = session?.token || session?.user.token;
+
+  const { mutate: updateBlog, isPending } = useUpdateBlog(token);
 
   const handleSubmit = (values: BlogFormValues) => {
     updateBlog({ publicId: blog.publicId, data: values }, { onSuccess: () => onOpenChange(false) });

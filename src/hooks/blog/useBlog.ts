@@ -3,7 +3,7 @@ import { fetcher } from "@/lib/fetcher";
 
 import { BlogFormValues } from "@/components/blogs/blog-form";
 import { toast } from "react-toastify";
-import { Blog, BlogsResponse } from "@/types/blog.types";
+import { BlogResponse, BlogsResponse } from "@/types/blog.types";
 import axiosInstance from "@/lib/axios";
 
 // ── Async Functions ───────────────────────────────────────
@@ -24,15 +24,31 @@ export const fetchMyBlogs = (
     },
   });
 };
+export const fetchAllBlogs = ({ page, limit, search }: { page: number; limit: number; search?: string }) => {
+  const query = new URLSearchParams();
+
+  if (search) query.set("search", search);
+  if (page) query.set("page", String(page));
+  if (limit) query.set("limit", String(limit));
+
+  return fetcher<BlogsResponse>(`/blogs${query.toString() ? `?${query.toString()}` : ""}`);
+};
 
 export const fetchBlog = (publicId: string, token?: string) =>
-  fetcher<Blog>(`/blogs/${publicId}`, {
+  fetcher<BlogResponse>(`/blogs/${publicId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-export const createBlog = async (payload: BlogFormValues, token?: string) => {
+export const createBlog = async (
+  payload: {
+    title: string;
+    content: string;
+    thumbnail?: string;
+  },
+  token?: string,
+) => {
   const { data } = await axiosInstance.post("/blogs", payload, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -70,6 +86,11 @@ export const deleteComment = async (blogPublicId: string, commentPublicId: strin
 
 // ── Hooks ─────────────────────────────────────────────────
 
+export const useGetAllBlogs = (params: { page: number; limit: number }) =>
+  useQuery({
+    queryKey: ["blog", params],
+    queryFn: () => fetchAllBlogs(params),
+  });
 export const useGetMyBlogs = (params: { page: number; limit: number }, token?: string) =>
   useQuery({
     queryKey: ["my-blogs", params],
@@ -86,7 +107,8 @@ export const useGetBlog = (publicId: string | null, options?: { enabled?: boolea
 export const useCreateBlog = (token?: string) => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (payload: BlogFormValues) => createBlog(payload, token),
+    mutationFn: (payload: { title: string; content: string; thumbnail?: string }) =>
+      createBlog(payload, token),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["my-blogs"] });
       toast.success("Blog published successfully");
@@ -131,5 +153,24 @@ export const useDeleteComment = (token?: string) => {
       toast.success("Comment removed");
     },
     onError: () => toast.error("Failed to delete comment"),
+  });
+};
+
+export const useAddComment = (token?: string) => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ blogPublicId, content }: { blogPublicId: string; content: string }) =>
+      axiosInstance
+        .post(
+          `/blogs/${blogPublicId}/comments`,
+          { content },
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        .then((r) => r.data),
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries({ queryKey: ["blog", vars.blogPublicId] });
+      toast.success("Comment posted");
+    },
+    onError: () => toast.error("Failed to post comment"),
   });
 };

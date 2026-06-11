@@ -35,9 +35,9 @@ const Navbar = () => {
         ]
       : []),
     { name: "Doctors", path: "/doctors" },
+    { name: "Blogs", path: "/blogs" },
     { name: "Services", path: "/services" },
     { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact-us" },
   ];
 
   const [open, setOpen] = useState(false);

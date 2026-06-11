@@ -23,6 +23,7 @@ export interface Blog {
   createdAt: string;
   updatedAt: string;
   comments?: BlogComment[];
+  doctor?: { specialization: string };
   _count?: {
     comments: number;
   };
@@ -33,4 +34,9 @@ export type BlogsResponse = {
   message: string;
   data: Blog[];
   meta?: PaginationMeta;
+};
+export type BlogResponse = {
+  success: boolean;
+  message: string;
+  data: Blog;
 };

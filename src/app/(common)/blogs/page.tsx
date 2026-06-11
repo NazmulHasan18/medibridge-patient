@@ -1,14 +1,12 @@
 "use client";
 
-import React from "react";
-import { Button } from "@/components/ui/button";
+import BlogCard from "@/components/blogs/blog-card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useGetAllBlogs } from "@/hooks/blog/useBlog";
-import { Skeleton } from "../ui/skeleton";
-import Link from "next/link";
-import BlogCard from "../blogs/blog-card";
+import React from "react";
 
-const Blogs = () => {
-  const { data: blogRes, isPending } = useGetAllBlogs({ page: 1, limit: 3 });
+const BlogsPage = () => {
+  const { data: blogRes, isPending } = useGetAllBlogs({ page: 1, limit: 10 });
 
   const diseaseResearchBlogs = blogRes?.data;
 
@@ -40,15 +38,9 @@ const Blogs = () => {
             </>
           )}
         </div>
-
-        <div className="flex justify-center items-center">
-          <Link href="/blogs" className="my-4">
-            <Button>Show More</Button>
-          </Link>
-        </div>
       </div>
     </section>
   );
 };
 
-export default Blogs;
+export default BlogsPage;

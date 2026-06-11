@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useDeleteBlog } from "@/hooks/blog/useBlog";
 import { Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 interface DeleteBlogDialogProps {
   publicId: string;
@@ -20,7 +21,10 @@ interface DeleteBlogDialogProps {
 }
 
 export function DeleteBlogDialog({ publicId, open, onOpenChange }: DeleteBlogDialogProps) {
-  const { mutate: deleteBlog, isPending } = useDeleteBlog();
+  const { data: session } = useSession();
+  const token = session?.token || session?.user.token;
+
+  const { mutate: deleteBlog, isPending } = useDeleteBlog(token);
 
   const handleDelete = () => {
     deleteBlog({ publicId }, { onSuccess: () => onOpenChange(false) });

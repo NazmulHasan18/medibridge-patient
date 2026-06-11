@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useDeleteComment, useGetBlog } from "@/hooks/blog/useBlog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useSession } from "next-auth/react";
 
 interface ManageCommentsSheetProps {
   blogPublicId: string | null;
@@ -16,8 +17,12 @@ interface ManageCommentsSheetProps {
 }
 
 export function ManageCommentsSheet({ blogPublicId, open, onOpenChange }: ManageCommentsSheetProps) {
-  const { data: blog, isLoading } = useGetBlog(blogPublicId, { enabled: !!blogPublicId && open });
-  const { mutate: deleteComment, isPending: isDeleting } = useDeleteComment();
+  const { data: session } = useSession();
+  const token = session?.token || session?.user.token;
+
+  const { data: blogRes, isLoading } = useGetBlog(blogPublicId, { enabled: !!blogPublicId && open }, token);
+  const blog = blogRes?.data;
+  const { mutate: deleteComment, isPending: isDeleting } = useDeleteComment(token);
 
   const handleDeleteComment = (commentPublicId: string) => {
     if (!blogPublicId) return;
