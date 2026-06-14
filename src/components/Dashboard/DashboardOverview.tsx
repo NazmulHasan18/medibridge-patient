@@ -17,11 +17,11 @@ type DashboardOverviewProps = {
   eyebrow: string;
   title: string;
   description: string;
-  stats: Stat[];
-  activityTitle: string;
-  activities: Activity[];
-  sideTitle: string;
-  sideItems: string[];
+  stats?: Stat[];
+  activityTitle?: string;
+  activities?: Activity[];
+  sideTitle?: string;
+  sideItems?: string[];
 };
 
 const DashboardOverview = ({
@@ -44,12 +44,11 @@ const DashboardOverview = ({
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-
-          return (
-            <article key={stat.label} className="rounded-lg border border-border bg-card p-5 shadow-sm">
+      {stats?.map((stat) => {
+        const Icon = stat.icon;
+        return (
+          <section key={stat.label} className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <article className="rounded-lg border border-border bg-card p-5 shadow-sm">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
@@ -61,9 +60,9 @@ const DashboardOverview = ({
               </div>
               <p className="mt-4 text-sm text-muted-foreground">{stat.detail}</p>
             </article>
-          );
-        })}
-      </section>
+          </section>
+        );
+      })}
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="rounded-lg border border-border bg-card shadow-sm">
@@ -71,7 +70,7 @@ const DashboardOverview = ({
             <h2 className="text-xl font-semibold">{activityTitle}</h2>
           </div>
           <div className="divide-y divide-border">
-            {activities.map((activity) => (
+            {activities?.map((activity) => (
               <div
                 key={activity.title}
                 className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"
@@ -91,7 +90,7 @@ const DashboardOverview = ({
         <aside className="rounded-lg border border-border bg-card p-5 shadow-sm">
           <h2 className="text-xl font-semibold">{sideTitle}</h2>
           <div className="mt-4 space-y-3">
-            {sideItems.map((item) => (
+            {sideItems?.map((item) => (
               <div
                 key={item}
                 className="rounded-md border border-border bg-background p-3 text-sm text-muted-foreground"

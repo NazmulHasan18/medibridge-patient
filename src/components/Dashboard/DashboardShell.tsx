@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import {
-  Activity,
+  // Activity,
   CalendarCheck,
   ClipboardList,
   CreditCard,
@@ -60,7 +60,7 @@ const navByRole = {
   patient: [
     { label: "Overview", href: "/patient", icon: LayoutDashboard },
     { label: "Appointments", href: "/patient/appointments", icon: CalendarCheck },
-    { label: "Medical Records", href: "/patient/medical-records", icon: Activity },
+    // { label: "Medical Records", href: "/patient/medical-records", icon: Activity },
     { label: "Prescriptions", href: "/patient/prescriptions", icon: Pill },
     { label: "Billing", href: "/patient/billing", icon: CreditCard },
     { label: "Profile", href: "/patient/profile", icon: UserCog },

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { CalendarClock, CalendarX, ClipboardCheck, Eye, Plus, Stethoscope } from "lucide-react";
+import { CalendarClock, CalendarX, ClipboardCheck, Eye, Stethoscope } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useCancelAppointment, useMyAppointment } from "@/hooks/appointments/useAppointment";
@@ -177,17 +177,10 @@ export default function AdminAppointmentPage() {
             <Stethoscope className="h-6 w-6" />
           </span>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold">My Appointments</h1>
+            <h1 className="text-3xl font-bold">Manage Appointments</h1>
             <p className="mt-1 text-muted-foreground">
               View upcoming visits, telemedicine sessions, and appointment history.
             </p>
-          </div>
-          <div>
-            <Link href="/patient/appointments/create">
-              <Button>
-                <Plus className="h-5 w-5" /> Book Appointment
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
