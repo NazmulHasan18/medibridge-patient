@@ -18,7 +18,7 @@ import {
   Stethoscope,
   UserCog,
   Users,
-  ShieldCheck,
+  // ShieldCheck,
   HomeIcon,
   NotebookPen,
 } from "lucide-react";
@@ -33,7 +33,7 @@ import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
 const navByRole = {
   super_admin: [
     { label: "Overview", href: "/admin", icon: LayoutDashboard },
-    { label: "Admin", href: "/admin/admins", icon: ShieldCheck },
+    // { label: "Admin", href: "/admin/admins", icon: ShieldCheck },
     { label: "Manage User", href: "/admin/manage-user", icon: UserCog },
     { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
     { label: "Doctors", href: "/admin/doctors", icon: Stethoscope },
