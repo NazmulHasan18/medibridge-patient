@@ -2,7 +2,7 @@
 
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DonutIcon } from "lucide-react";
+import { PieChart as PieIcon } from "lucide-react";
 import { AppointmentStatusBreakdownItem } from "@/types/dashboard.types";
 
 const STATUS_COLORS: Record<string, string> = {
@@ -27,7 +27,7 @@ interface Props {
   data?: AppointmentStatusBreakdownItem[];
 }
 
-export function AppointmentBreakdownChart({ data }: Props) {
+export function AdminAppointmentBreakdown({ data }: Props) {
   const chartData = (data ?? []).map((item) => ({
     name: STATUS_LABELS[item.status] ?? item.status,
     value: item.count,
@@ -38,8 +38,8 @@ export function AppointmentBreakdownChart({ data }: Props) {
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
-          <DonutIcon className="w-4 h-4 text-muted-foreground" />
-          Appointment breakdown
+          <PieIcon className="w-4 h-4 text-muted-foreground" />
+          Appointment status
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -49,8 +49,8 @@ export function AppointmentBreakdownChart({ data }: Props) {
               data={chartData}
               cx="50%"
               cy="50%"
-              innerRadius={60}
-              outerRadius={85}
+              innerRadius={58}
+              outerRadius={82}
               paddingAngle={3}
               dataKey="value"
             >
