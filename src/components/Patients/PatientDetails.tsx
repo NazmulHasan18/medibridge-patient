@@ -3,24 +3,45 @@
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
-import { Eye, FileText, Video } from "lucide-react";
+import { Eye, FileText } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { useGetPatientDetails } from "@/hooks/patient/usePatient";
+import { useGetPatientAllAppointments, useGetPatientDetails } from "@/hooks/patient/usePatient";
 import { DataTable } from "../ui/data-table";
 import { patientAppointmentColumns } from "./PatientAppointmentColumn";
+import { useState } from "react";
 
 const PatientDetails = ({ patientId }: { patientId: string }) => {
   const { data: session } = useSession();
+  const [page, setPage] = useState(1);
 
   const token = session?.token || session?.user?.token;
+  const role = session?.user.role;
+  const {
+    data: docPatientRes,
+    isLoading: docPatientLoading,
+    isError: docPatientError,
+  } = useGetPatientDetails(patientId, token, role === "DOCTOR");
+  const {
+    data: adminPatientRes,
+    isLoading: adminPatientLoading,
+    isError: adminPatientError,
+  } = useGetPatientAllAppointments(
+    patientId,
+    { page, limit: 10 },
+    token,
+    role === "ADMIN" || role === "SUPER_ADMIN",
+  );
 
-  const { data, isLoading, isError } = useGetPatientDetails(patientId, token);
+  const patient = role === "DOCTOR" ? docPatientRes?.data : adminPatientRes?.data.patient;
+  const isLoading = role === "DOCTOR" ? docPatientLoading : adminPatientLoading;
+  const isError = role === "DOCTOR" ? docPatientError : adminPatientError;
 
-  const patient = data?.data;
+  const appointments = role === "DOCTOR" ? patient?.appointments : adminPatientRes?.data.appointments;
+  const meta = role === "DOCTOR" ? docPatientRes?.meta : adminPatientRes?.meta;
 
   return (
     <div className="space-y-6">
@@ -65,7 +86,7 @@ const PatientDetails = ({ patientId }: { patientId: string }) => {
 
               <div>
                 <p className="text-sm text-muted-foreground">Total Visits</p>
-                <p>{patient?.appointments?.length || 0}</p>
+                <p>{appointments?.length || 0}</p>
               </div>
             </div>
           </div>
@@ -77,7 +98,7 @@ const PatientDetails = ({ patientId }: { patientId: string }) => {
       <DataTable
         title="Patient's Appointments"
         columns={patientAppointmentColumns}
-        data={patient?.appointments || []}
+        data={appointments || []}
         isLoading={isLoading}
         errorMessage={isError ? "Failed to load appointments." : undefined}
         emptyMessage="No appointment history found."
@@ -85,28 +106,33 @@ const PatientDetails = ({ patientId }: { patientId: string }) => {
           <>
             {/* View Appointment */}
             <Button asChild variant="outline" size="icon">
-              <Link href={`/doctor/appointments/${appointment.publicId}`}>
+              <Link
+                href={`/${role === "SUPER_ADMIN" ? "admin" : role?.toLowerCase()}/appointments/${appointment.publicId}`}
+              >
                 <Eye className="h-4 w-4" />
               </Link>
             </Button>
 
-            {/* Write/View Prescription */}
-            <Button asChild variant="outline" size="icon">
-              <Link href={`/doctor/appointments/${appointment.publicId}/prescription`}>
-                <FileText className="h-4 w-4" />
-              </Link>
-            </Button>
-
-            {/* Join Meeting */}
-            {appointment.consultationType === "ONLINE" && appointment.appointmentStatus === "CONFIRMED" && (
+            {role === "DOCTOR" && (
               <Button asChild variant="outline" size="icon">
-                <Link href={`/doctor/appointments/${appointment.publicId}/meeting`}>
-                  <Video className="h-4 w-4" />
+                <Link href={`/doctor/appointments/${appointment.publicId}/prescription`}>
+                  <FileText className="h-4 w-4" />
                 </Link>
               </Button>
             )}
           </>
         )}
+        pagination={
+          meta
+            ? {
+                page: meta.page,
+                pageSize: meta.limit,
+                totalItems: meta.total,
+                totalPages: meta.totalPages,
+                onPageChange: setPage,
+              }
+            : undefined
+        }
       />
     </div>
   );

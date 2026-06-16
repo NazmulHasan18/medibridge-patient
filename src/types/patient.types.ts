@@ -33,3 +33,15 @@ export type PatientIdAppointmentResponse = {
   data: Patient;
   meta?: PaginationMeta;
 };
+export type PatientIdAllAppointmentResponse = {
+  success: boolean;
+  message: string;
+  data: { patient: Patient; appointments: Appointment[] };
+  meta?: PaginationMeta;
+};
+
+export interface FetchPatientsQuery {
+  page?: number;
+  limit?: number;
+  searchTerm?: string;
+}

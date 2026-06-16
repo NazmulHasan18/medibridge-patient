@@ -1,17 +1,16 @@
 import { Users } from "lucide-react";
 import SectionPage from "@/components/Dashboard/SectionPage";
+import PatientList from "@/components/Patients/PatientList";
 
-export default function AdminPatientsPage() {
+export default async function DoctorPatientsPage() {
   return (
-    <SectionPage
-      title="Patients"
-      description="Track patient registrations, profiles, and care coordination status."
-      icon={Users}
-      items={[
-        { title: "Ayesha Rahman", meta: "Patient ID MB-2048 - profile complete", status: "Active" },
-        { title: "Tanvir Hasan", meta: "Patient ID MB-2051 - insurance pending", status: "Pending" },
-        { title: "Mim Akter", meta: "Patient ID MB-2054 - new registration", status: "New" },
-      ]}
-    />
+    <div>
+      <SectionPage
+        title="Patients"
+        description="Access assigned patient summaries and current treatment status."
+        icon={Users}
+      />
+      <PatientList></PatientList>
+    </div>
   );
 }
