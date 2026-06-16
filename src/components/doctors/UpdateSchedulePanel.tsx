@@ -1,4 +1,4 @@
-import { ScheduleForm } from "@/components/Dashboard/doctors/ScheduleForm";
+import { ScheduleForm } from "@/components/doctors/ScheduleForm";
 import type { DayOfWeek, DoctorSchedule } from "@/types/schedule.types";
 
 type UpdateSchedulePanelProps = {

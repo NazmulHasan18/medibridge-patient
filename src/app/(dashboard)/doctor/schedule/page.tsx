@@ -3,11 +3,11 @@
 import { useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { CreateSchedulePanel } from "@/components/Dashboard/doctors/CreateSchedulePanel";
-import { DoctorScheduleHeader } from "@/components/Dashboard/doctors/DoctorScheduleHeader";
-import { GenerateSlotsPanel } from "@/components/Dashboard/doctors/GenerateSlotsPanel";
-import { ScheduleListPanel } from "@/components/Dashboard/doctors/ScheduleListPanel";
-import { UpcomingSlotsPanel } from "@/components/Dashboard/doctors/UpcomingSlotsPanel";
+import { CreateSchedulePanel } from "@/components/doctors/CreateSchedulePanel";
+import { DoctorScheduleHeader } from "@/components/doctors/DoctorScheduleHeader";
+import { GenerateSlotsPanel } from "@/components/doctors/GenerateSlotsPanel";
+import { ScheduleListPanel } from "@/components/doctors/ScheduleListPanel";
+import { UpcomingSlotsPanel } from "@/components/doctors/UpcomingSlotsPanel";
 import {
   useCreateDoctorSchedule,
   useDoctorSchedules,
@@ -17,7 +17,7 @@ import {
 } from "@/hooks/doctor/useDoctorSchedule";
 import type { DayOfWeek, DoctorSchedule } from "@/types/schedule.types";
 import { toast } from "react-toastify";
-import { UpdateSchedulePanel } from "@/components/Dashboard/doctors/UpdateSchedulePanel";
+import { UpdateSchedulePanel } from "@/components/doctors/UpdateSchedulePanel";
 
 export default function DoctorSchedulePage() {
   const [edit, setEdit] = useState(false);

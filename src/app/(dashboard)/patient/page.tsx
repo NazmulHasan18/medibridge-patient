@@ -1,7 +1,5 @@
-// import { Activity, CalendarCheck, CreditCard, Pill } from "lucide-react";
-// import DashboardOverview from "@/components/Dashboard/DashboardOverview";
-import { RecentActivityFeed } from "@/components/Dashboard/patients/RecentActivityFeed";
-import { PatientOverviewCards } from "@/components/Dashboard/patients/PatientOverviewCard";
+import { RecentActivityFeed } from "@/components/Dashboard/patient/RecentActivityFeed";
+import { PatientOverviewCards } from "@/components/Dashboard/patient/PatientOverviewCard";
 
 export default function PatientPage() {
   return (
