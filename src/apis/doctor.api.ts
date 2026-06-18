@@ -1,10 +1,17 @@
 import axiosInstance from "@/lib/axios";
 import { fetcher } from "@/lib/fetcher";
-import { DoctorDetailResponse, DoctorResponse, UpdateDoctorPayload } from "@/types/doctor.types";
+import {
+  DoctorAvailableResponse,
+  DoctorDetailResponse,
+  DoctorResponse,
+  SpecializationsResponse,
+  UpdateDoctorPayload,
+} from "@/types/doctor.types";
 
 export type DoctorParams = {
   search?: string;
   specialization?: string;
+  availableDate?: string | Date;
   page?: number;
   limit?: number;
 };
@@ -18,6 +25,18 @@ export const getDoctors = (params: DoctorParams = {}): Promise<DoctorResponse> =
 
   return fetcher<DoctorResponse>(`/doctors?${query}`);
 };
+
+export const getAvailableDoctors = (params: DoctorParams = {}): Promise<DoctorAvailableResponse> => {
+  const query = new URLSearchParams(
+    Object.entries(params)
+      .filter(([, v]) => v !== undefined)
+      .map(([k, v]) => [k, String(v)]),
+  ).toString();
+
+  return fetcher<DoctorAvailableResponse>(`/doctors/available?${query}`);
+};
+
+export const getAllSpecialization = () => fetcher<SpecializationsResponse>(`/doctors/specializations`);
 
 export const getDoctorById = (id: string, token: string): Promise<DoctorDetailResponse> => {
   return fetcher<DoctorDetailResponse>(`/doctors/${id}`, {

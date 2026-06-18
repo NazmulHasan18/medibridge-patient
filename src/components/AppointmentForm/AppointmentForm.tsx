@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import FormInput from "@/components/Form/FormInput";
 import FormSelect from "../Form/FormSelect";
-import { useDoctors } from "@/hooks/doctor/useDoctor";
+import { useGetAllSpecializations, useGetAvailableDoctors } from "@/hooks/doctor/useDoctor";
 import { useDoctorSlots } from "@/hooks/doctor/useDoctorSchedule";
 import { useCreateAppointment } from "@/hooks/appointments/useAppointment";
 
@@ -70,19 +70,39 @@ const AppointmentForm = () => {
   const selectedDoctorPublicId = form.watch("doctor");
   const selectedAppointmentDate = form.watch("appointmentDate");
 
-  const allDoctorsQuery = useDoctors({ page: 1, limit: 100 });
-  const filteredDoctorsQuery = useDoctors({
-    page: 1,
-    limit: 100,
-    specialization: activeCategory || undefined,
+  // --- hooks ---
+  const { data: specializationsData } = useGetAllSpecializations();
+
+  const availableDoctorsQuery = useGetAvailableDoctors({
+    specialization: activeCategory,
+    appointmentDate: selectedAppointmentDate,
+    enabled: !!(activeCategory && selectedAppointmentDate),
   });
 
-  const doctors = useMemo(
-    () => (activeCategory ? filteredDoctorsQuery.data?.data?.data : allDoctorsQuery.data?.data?.data) ?? [],
-    [activeCategory, allDoctorsQuery.data?.data?.data, filteredDoctorsQuery.data?.data?.data],
+  // --- derived data ---
+
+  useEffect(() => {
+    if (availableDoctorsQuery.data?.data && !availableDoctorsQuery.data.data.available) {
+      toast.error(availableDoctorsQuery.data.data.message);
+    }
+  }, [availableDoctorsQuery.data]);
+
+  // Specializations are a flat string array: data.data = string[]
+  const categories = useMemo(
+    () => (specializationsData?.data ?? []).map((s: string) => ({ text: s, value: s })),
+    [specializationsData],
   );
-  const categories =
-    allDoctorsQuery.data?.data?.specializations?.map((item) => ({ text: item, value: item })) || [];
+
+  // Doctors live at data.data.doctors
+  const doctors = useMemo(
+    () => availableDoctorsQuery.data?.data?.doctors ?? [],
+    [availableDoctorsQuery.data],
+  );
+
+  // Availability banner data from the response
+  const availabilityMeta = availableDoctorsQuery.data?.data ?? null;
+  const isDoctorsAvailable = availabilityMeta?.available ?? true;
+  const suggestedDate = availabilityMeta?.availableDate ?? null;
 
   const doctorOptions = doctors.map((doc) => ({
     text: `${doc.user.name} • ${doc.specialization}`,
@@ -114,6 +134,8 @@ const AppointmentForm = () => {
       value: slot.id,
     }));
 
+  // --- effects ---
+
   useEffect(() => {
     if (session?.user?.name) {
       form.setValue("patientName", session.user.name, { shouldValidate: true });
@@ -121,18 +143,15 @@ const AppointmentForm = () => {
   }, [form, session]);
 
   useEffect(() => {
-    if (!doctorIdFromUrl || !allDoctorsQuery.data?.data?.data.length) return;
+    if (!doctorIdFromUrl || !doctors.length) return;
 
-    const prefilledDoctor = allDoctorsQuery.data.data.data.find(
-      (doctor) => doctor.publicId === doctorIdFromUrl,
-    );
-
+    const prefilledDoctor = doctors.find((doc) => doc.publicId === doctorIdFromUrl);
     if (prefilledDoctor) {
       form.setValue("doctorId", prefilledDoctor.id, { shouldValidate: true });
       form.setValue("doctor", prefilledDoctor.publicId, { shouldValidate: true });
       form.setValue("category", prefilledDoctor.specialization, { shouldValidate: true });
     }
-  }, [allDoctorsQuery.data, doctorIdFromUrl, form]);
+  }, [doctors, doctorIdFromUrl, form]);
 
   useEffect(() => {
     if (selectedDoctor) {
@@ -146,12 +165,14 @@ const AppointmentForm = () => {
   }, [form, selectedDoctorPublicId, selectedAppointmentDate]);
 
   useEffect(() => {
-    if (allDoctorsQuery.isError) {
+    if (availableDoctorsQuery.isError) {
       toast.error(
-        allDoctorsQuery.error instanceof Error ? allDoctorsQuery.error.message : "Failed to load doctors",
+        availableDoctorsQuery.error instanceof Error
+          ? availableDoctorsQuery.error.message
+          : "Failed to load doctors",
       );
     }
-  }, [allDoctorsQuery.error, allDoctorsQuery.isError]);
+  }, [availableDoctorsQuery.error, availableDoctorsQuery.isError]);
 
   useEffect(() => {
     if (isSlotsError) {
@@ -160,7 +181,6 @@ const AppointmentForm = () => {
   }, [isSlotsError]);
 
   const authToken = session?.user?.token ?? session?.token;
-
   const createAppointment = useCreateAppointment();
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -183,8 +203,8 @@ const AppointmentForm = () => {
     createAppointment.mutate({ payload, token: authToken });
   }
 
-  const isLoadingDoctors = allDoctorsQuery.isLoading || filteredDoctorsQuery.isLoading;
-  const isFetchingDoctors = allDoctorsQuery.isFetching || filteredDoctorsQuery.isFetching;
+  const isLoadingDoctors = availableDoctorsQuery.isLoading;
+  const isFetchingDoctors = availableDoctorsQuery.isFetching;
 
   return (
     <Form {...form}>
@@ -251,9 +271,43 @@ const AppointmentForm = () => {
           items={doctorOptions}
           label="Select Doctor"
           name="doctor"
-          placeholder="Select your doctor"
+          placeholder={
+            !activeCategory || !selectedAppointmentDate
+              ? "Choose category and date first"
+              : isLoadingDoctors
+                ? "Loading doctors..."
+                : doctorOptions.length === 0
+                  ? "No doctors available"
+                  : "Select your doctor"
+          }
           className="p-6"
         />
+
+        {/* Availability banner — shown when the API signals unavailability for the chosen date */}
+        {activeCategory &&
+          selectedAppointmentDate &&
+          !isLoadingDoctors &&
+          !isDoctorsAvailable &&
+          suggestedDate && (
+            <div className="md:col-span-2 rounded-2xl border border-dashed border-amber-400 bg-amber-50/60 p-4 text-sm dark:bg-amber-950/30">
+              <p className="font-semibold text-amber-800 dark:text-amber-200">
+                No doctors available on {moment(availabilityMeta?.requestedDate).format("MMM D, YYYY")}
+              </p>
+              <p className="mt-1 text-amber-700 dark:text-amber-300">
+                The next available date is{" "}
+                <button
+                  type="button"
+                  className="underline font-medium"
+                  onClick={() => {
+                    form.setValue("appointmentDate", suggestedDate, { shouldValidate: true });
+                  }}
+                >
+                  {moment(suggestedDate).format("MMM D, YYYY")}
+                </button>
+                . Click to use this date.
+              </p>
+            </div>
+          )}
 
         <FormSelect
           form={form}
@@ -270,6 +324,7 @@ const AppointmentForm = () => {
           className="p-6"
         />
 
+        {/* Doctor details card */}
         <div className="md:col-span-2 rounded-2xl border border-dashed border-blue-400 bg-blue-50/60 p-4 text-sm text-foreground dark:bg-blue-950/30">
           <p className="font-semibold">Selected doctor details</p>
           {selectedDoctor ? (
@@ -302,7 +357,7 @@ const AppointmentForm = () => {
         <Button
           type="submit"
           className="mx-auto w-fit md:col-span-2"
-          disabled={isLoadingDoctors || isSlotsLoading}
+          disabled={isLoadingDoctors || isSlotsLoading || createAppointment.isPending}
         >
           {isLoadingDoctors || isSlotsLoading || createAppointment.isPending
             ? "Loading..."

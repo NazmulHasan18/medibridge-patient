@@ -41,6 +41,23 @@ export type DoctorResponse = {
   };
 };
 
+export type DoctorAvailableResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    available: boolean;
+    requestedDate: string;
+    availableDate: string | null;
+    doctors: Doctor[];
+    message: string;
+  };
+};
+export type SpecializationsResponse = {
+  success: boolean;
+  message: string;
+  data: string[];
+};
+
 export type DoctorDetailResponse = {
   success: boolean;
   message: string;
