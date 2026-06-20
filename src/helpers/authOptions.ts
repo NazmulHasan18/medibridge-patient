@@ -12,7 +12,7 @@ async function refreshAccessToken(token: any) {
         Cookie: `sessionToken=${token.sessionToken}`,
       },
     });
-
+    // console.log("refresh", token);
     return {
       ...token,
       token: data?.data?.accessToken,
@@ -50,8 +50,8 @@ export const authOptions: NextAuthOptions = {
             email: credentials.email,
             password: credentials.password,
           });
-
           const { user, accessToken, sessionToken } = data.data;
+          // console.log({ user, accessToken, sessionToken });
 
           if (!user) {
             return null;
@@ -64,6 +64,7 @@ export const authOptions: NextAuthOptions = {
             role: user.role,
             publicId: user.publicId,
             image: user.profileImage,
+            doctor: user?.doctor,
             token: accessToken,
             sessionToken, // ONLY store access token
           };
@@ -83,12 +84,15 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (!token) return null;
+
+      // console.log("user jwt", user);
       // initial login
       if (user) {
         token.id = Number(user.id);
         token.role = user.role;
         token.publicId = user.publicId;
         token.token = user.token;
+        token.doctor = user.doctor;
         token.sessionToken = user.sessionToken;
         // optional: store expiry if backend gives it
         token.accessTokenExpires = Date.now() + 24 * 60 * 60 * 1000;
@@ -104,8 +108,11 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
+      // console.log("user session", token);
+
       session.user.id = token.id;
       session.user.role = token.role;
+      session.user.doctor = token?.doctor;
       session.user.publicId = token.publicId;
       session.user.token = token.token;
       session.user.sessionToken = token.sessionToken;

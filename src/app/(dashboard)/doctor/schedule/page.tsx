@@ -30,13 +30,15 @@ export default function DoctorSchedulePage() {
   const params = useParams();
 
   const { data: session } = useSession();
-  const publicId = params.id as string;
+
+  const publicId = (params.id || session?.user.doctor?.publicId) as string;
   const authToken = session?.token ?? session?.user?.token;
 
   const [dates, setDates] = useState(moment(new Date()).format("YYYY-MM-DD"));
 
   const { data: schedulesData, isLoading: schedulesLoading } = useDoctorSchedules(publicId);
   const { data: slotsRes, isLoading: slotsLoading } = useDoctorSlots({ publicId, date, page, limit: 10 });
+
   const slotsData = slotsRes?.data;
   const meta = slotsRes?.data?.meta;
   const createSchedule = useCreateDoctorSchedule(authToken);
