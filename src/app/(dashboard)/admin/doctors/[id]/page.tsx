@@ -7,6 +7,7 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { useDeleteDoctor, useDoctorById, useUpdateDoctor } from "@/hooks/doctor/useDoctorDetails";
+import Link from "next/link";
 
 export default function DoctorDetailPage() {
   const params = useParams<{ id: string }>();
@@ -106,13 +107,18 @@ export default function DoctorDetailPage() {
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => router.back()}>
-              Back
-            </Button>
-            <Button variant="destructive" onClick={handleDelete} disabled={deleteDoctorMutation.isPending}>
-              {deleteDoctorMutation.isPending ? "Deleting..." : "Delete Doctor"}
-            </Button>
+          <div className="flex flex-col gap-2">
+            <Link href={`/admin/doctors/${doctorId}/schedule`}>
+              <Button className="w-full">Manage Schedule</Button>
+            </Link>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => router.back()}>
+                Back
+              </Button>
+              <Button variant="destructive" onClick={handleDelete} disabled={deleteDoctorMutation.isPending}>
+                {deleteDoctorMutation.isPending ? "Deleting..." : "Delete Doctor"}
+              </Button>
+            </div>
           </div>
         </div>
       </div>

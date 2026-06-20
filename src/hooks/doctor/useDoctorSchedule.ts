@@ -98,7 +98,7 @@ export const useDeleteDoctorSchedule = (token?: string) => {
     mutationFn: ({ publicId, scheduleId }: { publicId: string; scheduleId: number }) =>
       deleteDoctorSchedule(publicId, scheduleId, token as string),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["doctor-schedules", variables.publicId] });
+      queryClient.invalidateQueries({ queryKey: ["doctor-schedules", "doctor-slots", variables.publicId] });
     },
   });
 };

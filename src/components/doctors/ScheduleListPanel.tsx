@@ -12,6 +12,7 @@ type ScheduleListPanelProps = {
   schedules: DoctorSchedule[];
   isLoading?: boolean;
   summary: string;
+  publicId: string;
   setUpdateData: Dispatch<SetStateAction<DoctorSchedule | undefined>>;
   setEdit: Dispatch<SetStateAction<boolean>>;
 };
@@ -22,11 +23,11 @@ export const ScheduleListPanel = ({
   summary,
   setEdit,
   setUpdateData,
+  publicId,
 }: ScheduleListPanelProps) => {
   const { data: session } = useSession();
 
   const authToken = session?.token;
-  const publicId = session?.user?.publicId;
 
   const deleteDoctorSchedule = useDeleteDoctorSchedule(authToken);
 

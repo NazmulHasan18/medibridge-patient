@@ -18,14 +18,13 @@ import {
 import type { DayOfWeek, DoctorSchedule } from "@/types/schedule.types";
 import { toast } from "react-toastify";
 import { UpdateSchedulePanel } from "@/components/doctors/UpdateSchedulePanel";
-import { useParams } from "next/navigation";
 import moment from "moment";
+import { useParams } from "next/navigation";
 
 export default function DoctorSchedulePage() {
   const [edit, setEdit] = useState(false);
   const [date, setDate] = useState<string | undefined>();
   const [page, setPage] = useState(1);
-
   const [updateData, setUpdateData] = useState<DoctorSchedule>();
   const params = useParams();
 
