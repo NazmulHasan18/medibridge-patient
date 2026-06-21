@@ -197,14 +197,7 @@ export const GenerateSlotsPanel = ({
             className="w-full"
             disabled={isGenerating || !scheduleId || sortedSelected.length === 0}
           >
-            <RefreshCw
-              className={cn(
-                "h-4 w-4",
-                isGenerating && "animate-spin",
-                !scheduleId && "animate-spin",
-                sortedSelected.length === 0 && "animate-spin",
-              )}
-            />
+            <RefreshCw className={cn("h-4 w-4", isGenerating && "animate-spin")} />
             {isGenerating ? "Generating..." : "Generate slots"}
           </Button>
         </div>

@@ -148,6 +148,7 @@ export default function DoctorSchedulePage() {
       />
       <UpcomingSlotsPanel
         setDate={setDate}
+        date={date}
         slots={slots}
         isLoading={slotsLoading}
         publicId={publicId as string}

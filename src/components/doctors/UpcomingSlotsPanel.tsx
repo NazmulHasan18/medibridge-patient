@@ -5,7 +5,7 @@ import { useCancelDoctorSlot, useDeleteFutureUnbookedSlots } from "@/hooks/docto
 import { PaginationMeta } from "@/types/doctor.types";
 import type { DoctorSlot } from "@/types/schedule.types";
 import { ColumnDef } from "@tanstack/react-table";
-import { CalendarX, Loader2, Trash2 } from "lucide-react";
+import { CalendarX, Loader2, Trash2, X } from "lucide-react";
 import moment from "moment";
 import { useSession } from "next-auth/react";
 import { Dispatch, SetStateAction } from "react";
@@ -14,6 +14,7 @@ type UpcomingSlotsPanelProps = {
   slots: DoctorSlot[];
   isLoading?: boolean;
   setDate: Dispatch<SetStateAction<string | undefined>>;
+  date?: string;
   publicId: string;
   meta?: PaginationMeta;
   setPage: Dispatch<SetStateAction<number>>;
@@ -26,6 +27,7 @@ export const UpcomingSlotsPanel = ({
   publicId,
   meta,
   setPage,
+  date,
 }: UpcomingSlotsPanelProps) => {
   const { data: session } = useSession();
 
@@ -101,10 +103,14 @@ export const UpcomingSlotsPanel = ({
               name="date"
               type="date"
               placeholder="Select Date"
+              value={date}
               onChange={(e) => {
                 setDate(e.target.value);
               }}
             ></Input>
+            <Button variant={"ghost"} size={"icon"} onClick={() => setDate("")}>
+              <X />
+            </Button>
           </div>
           <Button
             variant="destructive"

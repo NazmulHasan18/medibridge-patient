@@ -33,7 +33,7 @@ export function RescheduleDialog({ appointment, open, onClose }: Props) {
   const token = data?.token || data?.user.token;
 
   const { data: slotRes, isLoading: slotsLoading } = useDoctorSlots({
-    publicId: data?.user.publicId,
+    publicId: data?.user?.doctor?.publicId,
     date: targetDate,
     available: true,
     page: 1,

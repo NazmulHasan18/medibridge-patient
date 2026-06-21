@@ -74,6 +74,10 @@ export const ScheduleListPanel = ({
                   onClick={() => {
                     setEdit(true);
                     setUpdateData(schedule);
+                    window.scrollTo({
+                      top: 100,
+                      behavior: "smooth",
+                    });
                   }}
                 >
                   <Edit />

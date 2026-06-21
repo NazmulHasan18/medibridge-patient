@@ -52,7 +52,7 @@ const InfoCard = () => {
             <CardDescription className="text-gray-700">{info.description}</CardDescription>
           </CardHeader>
           <CardFooter>
-            <Link href="/about-us">
+            <Link href="/about">
               <Button className="pl-0" variant="link">
                 Details Info <ChevronsRight />
               </Button>

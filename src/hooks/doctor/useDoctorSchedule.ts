@@ -98,7 +98,19 @@ export const useDeleteDoctorSchedule = (token?: string) => {
     mutationFn: ({ publicId, scheduleId }: { publicId: string; scheduleId: number }) =>
       deleteDoctorSchedule(publicId, scheduleId, token as string),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["doctor-schedules", "doctor-slots", variables.publicId] });
+      queryClient.invalidateQueries({
+        queryKey: [
+          "doctor-schedules",
+          "doctor-schedule",
+          "doctor-slots",
+          variables.publicId,
+          variables.scheduleId,
+        ],
+      });
+      toast.success("Doctor schedule deleted successfully");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to delete Doctor schedule");
     },
   });
 };
@@ -120,6 +132,9 @@ export const useGenerateDoctorSlots = (token?: string) => {
       queryClient.invalidateQueries({ queryKey: ["doctor-slots", variables.publicId] });
       queryClient.invalidateQueries({ queryKey: ["doctor-schedules", variables.publicId] });
       toast.success("Slot generating completed");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Failed to delete slots");
     },
   });
 };

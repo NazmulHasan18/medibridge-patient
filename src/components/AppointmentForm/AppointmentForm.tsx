@@ -119,7 +119,7 @@ const AppointmentForm = () => {
     isLoading: isSlotsLoading,
     isError: isSlotsError,
   } = useDoctorSlots({
-    publicId: selectedDoctor?.user?.publicId,
+    publicId: selectedDoctor?.publicId,
     date: selectedAppointmentDate || undefined,
     available: true,
     page: 1,

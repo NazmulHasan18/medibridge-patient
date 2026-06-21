@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { getAppointmentByPublicId } from "@/apis/appointment.api";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/helpers/authOptions";
+import moment from "moment";
 
 interface Props {
   params: Promise<{
@@ -27,12 +28,11 @@ export default async function AppointmentDetailPage({ params }: Props) {
   const age = Math.floor(
     (Date.now() - new Date(appointment.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25),
   );
+  console.log(meeting);
 
-  const fmt = (d: string | Date) =>
-    new Intl.DateTimeFormat("en", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(d));
+  const fmt = (d: string | Date) => moment(d).format("DD MMM YYYY");
 
-  const fmtTime = (d: string | Date) =>
-    new Date(d).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const fmtTime = (d: string | Date) => moment(d).format("hh:mm A");
 
   const statusVariant: Record<string, string> = {
     CONFIRMED: "bg-green-100 text-green-700",
