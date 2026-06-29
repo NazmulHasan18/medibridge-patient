@@ -16,14 +16,14 @@ export type DoctorParams = {
   limit?: number;
 };
 
-export const getDoctors = (params: DoctorParams = {}): Promise<DoctorResponse> => {
+export const getDoctors = (params: DoctorParams = {}, options?: RequestInit): Promise<DoctorResponse> => {
   const query = new URLSearchParams(
     Object.entries(params)
       .filter(([, v]) => v !== undefined)
       .map(([k, v]) => [k, String(v)]),
   ).toString();
 
-  return fetcher<DoctorResponse>(`/doctors?${query}`);
+  return fetcher<DoctorResponse>(`/doctors?${query}`, options);
 };
 
 export const getAvailableDoctors = (params: DoctorParams = {}): Promise<DoctorAvailableResponse> => {

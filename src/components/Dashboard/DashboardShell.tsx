@@ -27,6 +27,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
+import { AppointmentAgentWidget } from "../aiAgent/AppointmentAgentWidget";
 
 // ─── Nav definitions ────────────────────────────────────────────────────────
 
@@ -296,6 +297,7 @@ const DashboardShell = ({ children }: { children: React.ReactNode }) => {
         </header>
 
         <main className="px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        {role === "patient" && <AppointmentAgentWidget></AppointmentAgentWidget>}
       </div>
     </div>
   );

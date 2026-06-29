@@ -4,16 +4,19 @@
 import { getAllSpecialization, getAvailableDoctors, getDoctors } from "@/apis/doctor.api";
 import { useQuery } from "@tanstack/react-query";
 
-export const useDoctors = (params: {
-  search?: string;
-  specialization?: string;
-  page?: number;
-  limit: number;
-  enabled?: boolean;
-}) => {
+export const useDoctors = (
+  params: {
+    search?: string;
+    specialization?: string;
+    page?: number;
+    limit: number;
+    enabled?: boolean;
+  },
+  options?: RequestInit,
+) => {
   return useQuery({
     queryKey: ["doctors", params],
-    queryFn: () => getDoctors(params),
+    queryFn: () => getDoctors(params, options),
     staleTime: 1000 * 60,
     placeholderData: (prev) => prev,
     enabled: params.enabled,

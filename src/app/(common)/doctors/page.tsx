@@ -10,12 +10,17 @@ const DoctorsList = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isError, error, isFetching } = useDoctors({
-    page,
-    limit: 10,
-    // send specialization only when not "All"
-    specialization: activeCategory === "All" ? undefined : activeCategory,
-  });
+  const { data, isLoading, isError, error, isFetching } = useDoctors(
+    {
+      page,
+      limit: 10,
+      // send specialization only when not "All"
+      specialization: activeCategory === "All" ? undefined : activeCategory,
+    },
+    {
+      //take fetch
+    },
+  );
 
   if (isError) {
     toast.error(error instanceof Error ? error.message : "Something went wrong");
