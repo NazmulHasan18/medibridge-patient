@@ -1,28 +1,40 @@
 import { withAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
-export default withAuth(function middleware() {}, {
-  callbacks: {
-    authorized: ({ token, req }) => {
-      const path = req.nextUrl.pathname;
+export default withAuth(
+  function middleware(req) {
+    const token = req.nextauth.token;
 
-      if (!token) return false;
+    if (token?.error === "RefreshAccessTokenError") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
 
-      if (path.startsWith("/admin")) {
-        return token.role === "ADMIN" || token.role === "SUPER_ADMIN";
-      }
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token, req }) => {
+        const path = req.nextUrl.pathname;
 
-      if (path.startsWith("/doctor")) {
-        return token.role === "DOCTOR";
-      }
+        if (!token) return false;
 
-      if (path.startsWith("/patient")) {
-        return token.role === "PATIENT";
-      }
+        if (path.startsWith("/admin")) {
+          return token.role === "ADMIN" || token.role === "SUPER_ADMIN";
+        }
 
-      return true;
+        if (path.startsWith("/doctor")) {
+          return token.role === "DOCTOR";
+        }
+
+        if (path.startsWith("/patient")) {
+          return token.role === "PATIENT";
+        }
+
+        return true;
+      },
     },
   },
-});
+);
 
 export const config = {
   matcher: ["/admin/:path*", "/doctor/:path*", "/patient/:path*"],
