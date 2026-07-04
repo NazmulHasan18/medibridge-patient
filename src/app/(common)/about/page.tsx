@@ -1,9 +1,11 @@
+import { AnimatedBackground } from "@/components/Interactive/AnimatedBackground";
 import React from "react";
 
 const AboutPage = () => {
   return (
-    <div className="bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 min-h-screen p-6">
-      <div className="max-w-5xl mx-auto space-y-12">
+    <main className="relative min-h-screen p-6">
+      <AnimatedBackground />
+      <div className="relative z-0 max-w-5xl mx-auto space-y-12">
         {/* Hero */}
         <section className="text-center py-10">
           <h1 className="text-4xl font-bold text-blue-600 mb-4">About Our Hospital Management System</h1>
@@ -53,7 +55,7 @@ const AboutPage = () => {
           </ul>
         </section>
       </div>
-    </div>
+    </main>
   );
 };
 

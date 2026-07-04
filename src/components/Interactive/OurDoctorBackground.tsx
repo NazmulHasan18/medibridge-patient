@@ -30,8 +30,8 @@ export function OurDoctorBackground() {
 
       // only update if the cursor is roughly within this section
       // (comment out this clamp if you want it to react from anywhere on the page)
-      targetX = Math.min(100, Math.max(0, x));
-      targetY = Math.min(100, Math.max(0, y));
+      targetX = Math.min(200, Math.max(0, x));
+      targetY = Math.min(200, Math.max(0, y));
     };
 
     const tick = () => {

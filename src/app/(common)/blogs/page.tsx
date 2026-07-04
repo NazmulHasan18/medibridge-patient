@@ -1,6 +1,7 @@
 "use client";
 
 import BlogCard from "@/components/blogs/blog-card";
+import BlogsBackground from "@/components/Interactive/BlogsBackgorund";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetAllBlogs } from "@/hooks/blog/useBlog";
 import React from "react";
@@ -11,7 +12,7 @@ const BlogsPage = () => {
   const diseaseResearchBlogs = blogRes?.data;
 
   return (
-    <section>
+    <BlogsBackground className="py-24">
       <div className="container mx-auto p-5 lg:p-10">
         <div className="flex flex-col items-center justify-center">
           <h1 className="text-4xl font-semibold">Blogs</h1>
@@ -39,7 +40,7 @@ const BlogsPage = () => {
           )}
         </div>
       </div>
-    </section>
+    </BlogsBackground>
   );
 };
 

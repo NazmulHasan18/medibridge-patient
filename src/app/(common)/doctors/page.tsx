@@ -1,5 +1,6 @@
 "use client";
 import { DoctorCard } from "@/components/DoctorCard/DoctorCard";
+import { OurDoctorBackground } from "@/components/Interactive/OurDoctorBackground";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDoctors } from "@/hooks/doctor/useDoctor";
@@ -31,6 +32,7 @@ const DoctorsList = () => {
 
   return (
     <section className="container mx-auto p-5 md:p-10">
+      <OurDoctorBackground></OurDoctorBackground>
       <div className="flex flex-col items-center justify-center">
         <h1 className="text-4xl font-semibold">Our Doctors</h1>
         <p className="text-2xl">Our Experts Doctors For The Patients</p>
