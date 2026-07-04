@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { LogOut, Menu, UserRound } from "lucide-react";
+import { Activity, LogOut, Menu, UserRound } from "lucide-react";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { signOut, useSession } from "next-auth/react";
@@ -26,6 +26,7 @@ const Navbar = () => {
   const userImage = session?.user?.image || sessionData?.picture;
 
   const navItems = [
+    { name: "Home", path: "/" },
     ...(session?.user
       ? [
           {
@@ -41,19 +42,31 @@ const Navbar = () => {
   ];
 
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const path = usePathname();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/login" });
   };
 
+  const roleHome = session?.user
+    ? `/${session.user.role.toLowerCase() === "super_admin" ? "admin" : session.user.role.toLowerCase()}`
+    : "";
+
   const profileButton = (
     <Link
-      href={`/${session?.user.role.toLowerCase() === "super_admin" ? "admin" : session?.user.role.toLowerCase()}/profile`}
-      className="group relative flex h-10 w-10 items-center justify-center"
+      href={`${roleHome}/profile`}
+      className="group relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#00A8E8] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <span
-        className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-border bg-background shadow-sm transition-colors hover:bg-accent"
+        className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-border bg-background shadow-sm ring-0 ring-[#00A8E8]/40 transition-all duration-200 group-hover:ring-2"
         title={userName}
       >
         {userImage ? (
@@ -65,7 +78,7 @@ const Navbar = () => {
             className="h-full w-full object-cover"
           />
         ) : (
-          <UserRound className="h-5 w-5" />
+          <UserRound className="h-5 w-5 text-muted-foreground" />
         )}
       </span>
     </Link>
@@ -74,7 +87,11 @@ const Navbar = () => {
   const authButtons = isAuthenticated ? (
     <>
       {profileButton}
-      <Button variant="destructive" className="gap-2" onClick={handleSignOut}>
+      <Button
+        variant="outline"
+        className="gap-2 border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+        onClick={handleSignOut}
+      >
         <LogOut className="h-4 w-4" />
         Sign Out
       </Button>
@@ -82,22 +99,22 @@ const Navbar = () => {
   ) : (
     <>
       <Link href="/login">
-        <Button variant="outline">Sign In</Button>
+        <Button variant="ghost" className="text-foreground/80 hover:text-foreground">
+          Sign In
+        </Button>
       </Link>
       <Link href="/sign-up">
-        <Button>Sign Up</Button>
+        <Button className="bg-gradient-to-r from-[#0077B6] to-[#00A8E8] text-white shadow-sm shadow-[#0077B6]/25 transition-transform hover:scale-[1.02] hover:shadow-md hover:shadow-[#0077B6]/30">
+          Sign Up
+        </Button>
       </Link>
     </>
   );
 
   const mobileAuthButtons = isAuthenticated ? (
     <div className="space-y-3 pt-2">
-      <Link
-        href={`/${session.user.role.toLowerCase() === "super_admin" ? "admin" : session.user.role.toLowerCase()}/profile`}
-        onClick={() => setOpen(false)}
-        className="block"
-      >
-        <Button variant="outline" className="w-full justify-start gap-3 active:scale-95">
+      <Link href={`${roleHome}/profile`} onClick={() => setOpen(false)} className="block">
+        <Button variant="outline" className="w-full justify-start gap-3 border-border/80 active:scale-[0.98]">
           {userImage ? (
             <Image
               width={30}
@@ -120,8 +137,8 @@ const Navbar = () => {
         </Button>
       </Link>
       <Button
-        variant="destructive"
-        className="w-full gap-2 active:scale-95"
+        variant="outline"
+        className="w-full gap-2 border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground active:scale-[0.98]"
         onClick={() => {
           setOpen(false);
           handleSignOut();
@@ -132,91 +149,112 @@ const Navbar = () => {
       </Button>
     </div>
   ) : (
-    <>
+    <div className="space-y-3 pt-2">
       <Link href="/login" onClick={() => setOpen(false)}>
-        <Button variant="outline" className="w-full active:scale-95">
+        <Button variant="outline" className="w-full active:scale-[0.98]">
           Sign In
         </Button>
       </Link>
       <Link href="/sign-up" onClick={() => setOpen(false)}>
-        <Button className="w-full active:scale-95">Sign Up</Button>
+        <Button className="w-full bg-gradient-to-r from-[#0077B6] to-[#00A8E8] text-white active:scale-[0.98]">
+          Sign Up
+        </Button>
       </Link>
-    </>
+    </div>
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full overflow-hidden border-b border-white/30 bg-white/65 shadow-sm shadow-slate-900/5 backdrop-blur-xl backdrop-saturate-150 before:pointer-events-none before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.65),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(0,168,232,0.18),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.28),rgba(255,255,255,0.08))] before:opacity-80 dark:border-white/10 dark:bg-background/70 dark:shadow-black/10 dark:before:bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.12),transparent_28%),radial-gradient(circle_at_80%_0%,rgba(0,168,232,0.16),transparent_32%),linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
-      <nav className="container relative z-10 mx-auto flex justify-between items-center py-4 px-6">
+    <header
+      className={clsx(
+        "sticky top-0 z-50 w-full border-b backdrop-blur-xl backdrop-saturate-150 transition-all duration-300",
+        scrolled
+          ? "border-border/60 bg-background/85 shadow-sm shadow-slate-900/5 dark:shadow-black/20"
+          : "border-transparent bg-background/50",
+      )}
+    >
+      <nav className="container relative mx-auto flex items-center justify-between px-6 py-3.5">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold text-blue-600 hover:text-blue-500">
-          MediBridge
+        <Link
+          href="/"
+          className="group flex items-center gap-2 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#00A8E8]"
+        >
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#0077B6] to-[#00A8E8] text-white shadow-sm shadow-[#0077B6]/30 transition-transform duration-200 group-hover:scale-105">
+            <Activity className="h-4.5 w-4.5" strokeWidth={2.5} />
+          </span>
+          <span className="bg-gradient-to-r from-[#0077B6] to-[#00A8E8] bg-clip-text text-xl font-bold tracking-tight text-transparent">
+            MediBridge
+          </span>
         </Link>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex space-x-6 text-foreground">
-          <li>
-            <Link
-              href={`/`}
-              className={clsx(
-                "hover:text-blue-600 font-medium text-black",
-                "dark:text-foreground",
-                path === "/" ? "underline text-primary" : "bg-none",
-              )}
-            >
-              Home
-            </Link>
-          </li>
-          {navItems.map((item, i) => (
-            <li key={i}>
-              <Link
-                href={item.path}
-                className={clsx(
-                  "hover:text-blue-600 font-medium text-black",
-                  "dark:text-foreground",
-                  path === item.path ? "underline text-primary" : "bg-none",
-                )}
-              >
-                {item.name}
-              </Link>
-            </li>
-          ))}
+        <ul className="hidden items-center gap-1 rounded-full border border-border/60 bg-muted/40 p-1 md:flex">
+          {navItems.map((item, i) => {
+            const isActive = path === item.path;
+            return (
+              <li key={i}>
+                <Link
+                  href={item.path}
+                  className={clsx(
+                    "relative block rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#00A8E8]",
+                    isActive
+                      ? "bg-gradient-to-r from-[#0077B6] to-[#00A8E8] text-white shadow-sm shadow-[#0077B6]/25"
+                      : "text-foreground/70 hover:bg-background hover:text-foreground",
+                  )}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         {/* Auth Buttons */}
-        <div className="hidden md:flex items-center space-x-3">
+        <div className="hidden items-center gap-3 md:flex">
           <ThemeToggle />
+          <span className="mx-1 h-6 w-px bg-border" aria-hidden="true" />
           {authButtons}
         </div>
 
-        {/* Mobile Menu Button test */}
+        {/* Mobile Menu Button */}
         <div className="flex items-center gap-2 md:hidden">
           <ThemeToggle />
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Open menu">
+              <Button variant="ghost" size="icon" aria-label="Open menu" className="hover:bg-muted">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent title="Navigators" side="left" className="p-6">
-              <SheetTitle className="text-2xl font-bold text-blue-600 ">MediBridge</SheetTitle>
-              <nav className="flex flex-col space-y-4 text-lg">
-                <Link
-                  href={`/`}
-                  onClick={() => setOpen(false)}
-                  className="p-2 rounded-md transition-all duration-200 active:bg-accent hover:bg-accent hover:text-accent-foreground"
-                >
-                  Home
-                </Link>
-                {navItems.map((item, i) => (
-                  <Link
-                    key={i}
-                    href={item.path}
-                    onClick={() => setOpen(false)}
-                    className="p-2 rounded-md transition-all duration-200 active:bg-accent hover:bg-accent hover:text-accent-foreground"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+            <SheetContent title="Navigators" side="left" className="flex flex-col p-6">
+              <SheetTitle className="flex items-center gap-2 text-xl font-bold">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-[#0077B6] to-[#00A8E8] text-white">
+                  <Activity className="h-4 w-4" strokeWidth={2.5} />
+                </span>
+                <span className="bg-gradient-to-r from-[#0077B6] to-[#00A8E8] bg-clip-text text-transparent">
+                  MediBridge
+                </span>
+              </SheetTitle>
+              <nav className="mt-6 flex flex-1 flex-col justify-between">
+                <ul className="flex flex-col gap-1 text-base">
+                  {navItems.map((item, i) => {
+                    const isActive = path === item.path;
+                    return (
+                      <li key={i}>
+                        <Link
+                          href={item.path}
+                          onClick={() => setOpen(false)}
+                          className={clsx(
+                            "block rounded-lg px-3 py-2.5 font-medium transition-colors duration-200",
+                            isActive
+                              ? "bg-gradient-to-r from-[#0077B6]/10 to-[#00A8E8]/10 text-[#0077B6] dark:text-[#00A8E8]"
+                              : "text-foreground/80 hover:bg-muted",
+                          )}
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
                 {mobileAuthButtons}
               </nav>
             </SheetContent>

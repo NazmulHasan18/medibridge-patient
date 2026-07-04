@@ -1,118 +1,83 @@
-# MediBridge Frontend
+# MediBridge
 
-A modern healthcare appointment booking frontend built with **Next.js**, **Tailwind CSS**, and **TanStack Query**.
+MediBridge is a modern healthcare platform designed to simplify doctor discovery and appointment booking for patients. The project combines a polished patient-facing experience with role-based dashboards for patients, doctors, and administrators.
 
----
+## Why this project?
 
-## 🚀 Tech Stack
+Healthcare access should be simple, fast, and trustworthy. MediBridge aims to make that possible by providing a digital experience where users can discover services, book appointments, and manage healthcare interactions in one place.
 
-- Next.js (App Router)
+## Key Features
+
+- Role-based access for patients, doctors, and admins
+- Secure authentication and protected routes
+- Appointment booking and management flow
+- Doctor and service browsing experience
+- Responsive, modern UI for desktop and mobile
+- AI assistant support for appointment-related guidance
+- Blog, testimonial, and healthcare content sections
+
+## Tech Stack
+
+- Next.js 15
 - TypeScript
 - Tailwind CSS
-- shadcn/ui
 - TanStack Query
 - React Hook Form
 - Zod
-- NextAuth (Authentication)
+- NextAuth
+- shadcn/ui-style component system
 
----
+## Project Highlights
 
-## 📦 Features
+- Built as a full-stack healthcare application with a strong focus on user experience
+- Designed with scalability and maintainability in mind
+- Structured using a modular component-based architecture
+- Includes dedicated dashboard flows for different user roles
 
-- Patient & Doctor authentication
-- Browse doctors and specialties
-- Book appointments
-- View appointment history
-- Responsive UI for all devices
-- Protected routes (role-based access)
-
----
-
-## 🛠️ Installation
+## Project Structure
 
 ```bash
-git clone <frontend-repo-url>
-cd frontend
+src/
+├── app/           # App routes and layouts
+├── components/    # Reusable UI and feature components
+├── hooks/         # Custom hooks
+├── apis/          # API integration layer
+├── lib/           # Shared utilities and helpers
+├── types/         # TypeScript interfaces and models
+└── utils/         # Utility functions
+```
+
+## Getting Started
+
+### Install dependencies
+
+```bash
 npm install
 ```
 
----
-
-## ⚙️ Environment Variables
-
-Create a `.env.local` file:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_secret_key
-```
-
----
-
-## 🧑‍💻 Run Development Server
+### Run locally
 
 ```bash
 npm run dev
 ```
 
-App will run at:
+Open http://localhost:3000 to view it in the browser.
 
-```
-http://localhost:3000
-```
-
----
-
-## 📦 Build for Production
+### Build for production
 
 ```bash
 npm run build
-npm start
 ```
 
----
+## Live Demo
 
-## 📁 Project Structure
+- Frontend: https://medibridge-patient.vercel.app
 
-```
-src/
- ├── app/
- ├── components/
- ├── features/
- ├── hooks/
- ├── lib/
- ├── services/
- ├── styles/
- └── utils/
-```
+## GitHub Repositories
 
----
+- Client: https://github.com/NazmulHasan18/medibridge-patient
+- Server/API: https://github.com/NazmulHasan18/medibridge-api
 
-## 🔐 Authentication
+## Contact
 
-Uses NextAuth for:
-
-- Login
-- Session management
-- Protected routes
-
----
-
-## 📡 API Integration
-
-All API requests are handled using TanStack Query with a centralized API service layer.
-
----
-
-## 🧪 Linting
-
-```bash
-npm run lint
-```
-
----
-
-## 📄 License
-
-MIT
+For inquiries or collaboration opportunities, feel free to connect with me on GitHub.
