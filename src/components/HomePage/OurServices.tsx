@@ -1,51 +1,46 @@
-"use server";
-import React from "react";
 import hospitalServices from "../../../data/serviceData";
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
-
 import { Carousel, CarouselContent, CarouselDots, CarouselItem } from "@/components/ui/carousel";
-import Image from "next/image";
-import Link from "next/link";
+import ServiceCard, { HospitalService } from "./ServiceCard";
+import InteractiveGlow from "../Interactive/InteractiveGlow";
 
+// Server component: no client hooks here, all interactivity lives in the
+// InteractiveGlow / ServiceCard client components below it.
 const OurServices = async () => {
+  const services = hospitalServices as HospitalService[];
+
   return (
-    <section className="bg-blue-900 text-white">
-      <div className="container mx-auto p-10 pb-5">
-        <h1 className="text-4xl font-semibold">Our Services</h1>
-        <p className="text-2xl">Comprehensive Healthcare Services at Your Fingertips</p>
-        <div className="w-full md:w-96 h-1 bg-white"></div>
+    <section className="relative overflow-hidden bg-background py-24 sm:py-28">
+      <InteractiveGlow />
 
-        <div className="my-16">
-          <Carousel
-            opts={{
-              align: "start",
-            }}
-            className="w-full"
-          >
-            <CarouselContent>
-              {hospitalServices.map((service) => (
-                <CarouselItem key={service.id} className="md:basis-1/2 lg:basis-1/3">
-                  <Link href={`/service/${service.id}`}>
-                    <Card className="flex flex-row min-h-[250px]">
-                      <Image
-                        src={service.image}
-                        height={250}
-                        width={150}
-                        alt={service.title}
-                        className="rounded-l-xl p-0 m-0"
-                      ></Image>
+      <div className="container relative z-10 mx-auto max-w-6xl px-6">
+        {/* intro */}
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-card/60 px-3 py-1 text-xs font-medium uppercase tracking-wide text-primary backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            Our Services
+          </span>
 
-                      <CardContent className="py-5 p-5 space-y-4">
-                        <CardTitle className="text-xl line-clamp-2">{service.title}</CardTitle>
-                        <CardTitle>{service.category}</CardTitle>
-                        <CardDescription className="line-clamp-5">{service.description}</CardDescription>
-                      </CardContent>
-                    </Card>
-                  </Link>
+          <h2 className="mt-5 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            Comprehensive care, designed around you
+          </h2>
+
+          <p className="mt-4 text-balance text-base leading-relaxed text-muted-foreground sm:text-lg">
+            From routine checkups to specialist treatment, every service on MediBridge is built for clarity,
+            speed, and peace of mind.
+          </p>
+        </div>
+
+        {/* cards */}
+        <div className="mt-16">
+          <Carousel opts={{ align: "start" }} className="w-full">
+            <CarouselContent className="-ml-4">
+              {services.map((service, index) => (
+                <CarouselItem key={service.id} className="basis-full pl-4 sm:basis-1/2 lg:basis-1/3">
+                  <ServiceCard service={service} index={index} />
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselDots className="mt-6" />
+            <CarouselDots className="mt-10" />
           </Carousel>
         </div>
       </div>
